@@ -1,6 +1,11 @@
 package com.valsagnapps.dndapp.domain.features
 
+import com.valsagnapps.dndapp.domain.Ability
+import com.valsagnapps.dndapp.domain.ActionType
 import com.valsagnapps.dndapp.domain.ClassFeature
+import com.valsagnapps.dndapp.domain.Recharge
+import com.valsagnapps.dndapp.domain.Resource
+import com.valsagnapps.dndapp.domain.Uses
 
 // Paladin y sus juramentos. Paladin y Oath of Devotion son SRD: llevan el texto del SRD 5.1 además del resumen propio.
 internal val PALADIN_FEATURES = listOf(
@@ -21,6 +26,9 @@ internal val PALADIN_FEATURES = listOf(
             "place or object that has been consecrated or desecrated, as with the hallow spell.\n\nYou can use this " +
             "feature a number of times equal to 1 + your Charisma modifier. When you finish a long rest, you regain " +
             "all expended uses.",
+        actionType = ActionType.ACTION,
+        resource = Resource.DIVINE_SENSE,
+        uses = Uses.abilityModifier(Ability.CHARISMA, Recharge.LONG_REST, bonus = 1),
     ),
     ClassFeature(
         id = "PALADIN_LAY_ON_HANDS",
@@ -39,6 +47,9 @@ internal val PALADIN_FEATURES = listOf(
             "poison affecting it. You can cure multiple diseases and neutralize multiple poisons with a single use " +
             "of Lay on Hands, expending hit points separately for each one.\n\nThis feature has no effect on undead " +
             "and constructs.",
+        actionType = ActionType.ACTION,
+        resource = Resource.LAY_ON_HANDS,
+        uses = Uses.perClassLevel(multiplier = 5, recharge = Recharge.LONG_REST),
     ),
     ClassFeature(
         id = "PALADIN_FIGHTING_STYLE",
@@ -120,6 +131,8 @@ internal val PALADIN_FEATURES = listOf(
             "option to use. You must then finish a short or long rest to use your Channel Divinity again.\n\nSome " +
             "Channel Divinity effects require saving throws. When you use such an effect from this class, the DC " +
             "equals your paladin spell save DC.",
+        resource = Resource.CHANNEL_DIVINITY,
+        uses = Uses.fixed(count = 1, recharge = Recharge.SHORT_REST),
     ),
     ClassFeature(
         id = "PALADIN_ABILITY_SCORE_IMPROVEMENT",
@@ -186,6 +199,9 @@ internal val PALADIN_FEATURES = listOf(
         "Beginning at 14th level, you can use your action to end one spell on yourself or on one willing creature " +
             "that you touch.\n\nYou can use this feature a number of times equal to your Charisma modifier (a " +
             "minimum of once). You regain expended uses when you finish a long rest.",
+        actionType = ActionType.ACTION,
+        resource = Resource.CLEANSING_TOUCH,
+        uses = Uses.abilityModifier(Ability.CHARISMA, Recharge.LONG_REST),
     ),
 )
 
@@ -204,6 +220,8 @@ internal val DEVOTION_FEATURES = listOf(
             "beyond that. If the weapon is not already magical, it becomes magical for the duration.\n\nYou can end " +
             "this effect on your turn as part of any other action. If you are no longer holding or carrying this " +
             "weapon, or if you fall unconscious, this effect ends.",
+        actionType = ActionType.ACTION,
+        resource = Resource.CHANNEL_DIVINITY,
     ),
     ClassFeature(
         id = "DEVOTION_TURN_THE_UNHOLY",
@@ -220,6 +238,8 @@ internal val DEVOTION_FEATURES = listOf(
             "and it can't willingly move to a space within 30 feet of you. It also can't take reactions. For its " +
             "action, it can use only the Dash action or try to escape from an effect that prevents it from moving. " +
             "If there's nowhere to move, the creature can use the Dodge action.",
+        actionType = ActionType.ACTION,
+        resource = Resource.CHANNEL_DIVINITY,
     ),
     ClassFeature(
         id = "DEVOTION_AURA_OF_DEVOTION",
@@ -251,6 +271,9 @@ internal val DEVOTION_FEATURES = listOf(
             "you in a 30-foot radius, and dim light shines 30 feet beyond that.\n\nWhenever an enemy creature starts " +
             "its turn in the bright light, the creature takes 10 radiant damage.\n\nIn addition, for the duration, " +
             "you have advantage on saving throws against spells cast by fiends or undead.",
+        actionType = ActionType.ACTION,
+        resource = Resource.HOLY_NIMBUS,
+        uses = Uses.fixed(count = 1, recharge = Recharge.LONG_REST),
     ),
 )
 
@@ -263,6 +286,8 @@ internal val ANCIENTS_FEATURES = listOf(
         summary =
         "Action: spectral vines try to restrain a creature within 10 ft. It makes a Strength or Dexterity save (its " +
             "choice) or is restrained, and repeats the save at the end of each of its turns.",
+        actionType = ActionType.ACTION,
+        resource = Resource.CHANNEL_DIVINITY,
     ),
     ClassFeature(
         id = "ANCIENTS_TURN_THE_FAITHLESS",
@@ -271,6 +296,8 @@ internal val ANCIENTS_FEATURES = listOf(
         summary =
         "Action: each fey or fiend within 30 ft that can hear you makes a Wisdom save or is turned for 1 minute or " +
             "until it takes damage. A creature in disguise or shapechanged reveals its true form.",
+        actionType = ActionType.ACTION,
+        resource = Resource.CHANNEL_DIVINITY,
     ),
     ClassFeature(
         id = "ANCIENTS_AURA_OF_WARDING",
@@ -287,6 +314,8 @@ internal val ANCIENTS_FEATURES = listOf(
         summary =
         "Once per long rest, when you are reduced to 0 hit points without being killed outright, drop to 1 hit point " +
             "instead. You also don't suffer the drawbacks of old age and can't be aged magically.",
+        resource = Resource.UNDYING_SENTINEL,
+        uses = Uses.fixed(count = 1, recharge = Recharge.LONG_REST),
     ),
     ClassFeature(
         id = "ANCIENTS_ELDER_CHAMPION",
@@ -296,6 +325,9 @@ internal val ANCIENTS_FEATURES = listOf(
         "Action: transform for 1 minute. You regain 10 hit points at the start of each of your turns, cast paladin " +
             "spells of 1 action as a bonus action, and enemies within 10 ft have disadvantage on saves against your " +
             "spells and Channel Divinity. Once per long rest.",
+        actionType = ActionType.ACTION,
+        resource = Resource.ELDER_CHAMPION,
+        uses = Uses.fixed(count = 1, recharge = Recharge.LONG_REST),
     ),
 )
 
@@ -309,6 +341,8 @@ internal val VENGEANCE_FEATURES = listOf(
         "Action: a creature within 60 ft that you can see makes a Wisdom save (fiends and undead with disadvantage). " +
             "On a failure it is frightened for 1 minute or until it takes damage and its speed is 0; on a success " +
             "its speed is halved.",
+        actionType = ActionType.ACTION,
+        resource = Resource.CHANNEL_DIVINITY,
     ),
     ClassFeature(
         id = "VENGEANCE_VOW_OF_ENMITY",
@@ -317,6 +351,8 @@ internal val VENGEANCE_FEATURES = listOf(
         summary =
         "Bonus action: gain advantage on attack rolls against a creature within 10 ft for 1 minute or until it drops " +
             "to 0 hit points or falls unconscious.",
+        actionType = ActionType.BONUS_ACTION,
+        resource = Resource.CHANNEL_DIVINITY,
     ),
     ClassFeature(
         id = "VENGEANCE_RELENTLESS_AVENGER",
@@ -333,6 +369,7 @@ internal val VENGEANCE_FEATURES = listOf(
         summary =
         "When the target of your Vow of Enmity attacks, you can use your reaction to make a melee weapon attack " +
             "against it if it is within range.",
+        actionType = ActionType.REACTION,
     ),
     ClassFeature(
         id = "VENGEANCE_AVENGING_ANGEL",
@@ -343,5 +380,8 @@ internal val VENGEANCE_FEATURES = listOf(
             "first time an enemy enters it or starts its turn there in a battle, it makes a Wisdom save or is " +
             "frightened for 1 minute or until it takes damage. Attacks against a frightened creature have advantage. " +
             "Once per long rest.",
+        actionType = ActionType.ACTION,
+        resource = Resource.AVENGING_ANGEL,
+        uses = Uses.fixed(count = 1, recharge = Recharge.LONG_REST),
     ),
 )

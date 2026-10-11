@@ -16,6 +16,7 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.EnumSource
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 class ClassFeatureTest {
@@ -190,6 +191,44 @@ class ClassFeatureTest {
 
         assertEquals(RANGER.features.size + Subclass.HUNTER.features.size, features.size)
         assertEquals("RANGER_FOE_SLAYER", features.last().id)
+    }
+
+    @Test
+    fun `every resource is given by some feature`() {
+        val given = allFeatures.filter { it.uses != null }.mapNotNull { it.resource }.toSet()
+
+        assertEquals(Resource.entries.toSet(), given)
+    }
+
+    @Test
+    fun `features only spend resources that their class or subclass gives`() {
+        fun givenBy(characterClass: CharacterClass) = (
+            characterClass.features +
+                Subclass.entries.filter { it.characterClass == characterClass }.flatMap { it.features }
+            )
+            .filter { it.uses != null }
+            .mapNotNull { it.resource }
+
+        CharacterClass.entries.forEach { characterClass ->
+            val features = characterClass.features +
+                Subclass.entries.filter { it.characterClass == characterClass }.flatMap { it.features }
+            features.mapNotNull { feature -> feature.resource?.let { feature.id to it } }.forEach { (id, resource) ->
+                assertTrue(resource in givenBy(characterClass), id)
+            }
+        }
+    }
+
+    @Test
+    fun `features with actions and uses are marked`() {
+        val rage = BARBARIAN.features.first { it.id == "BARBARIAN_RAGE" }
+        val turnUndead = CLERIC.features.first { it.id == "CLERIC_TURN_UNDEAD" }
+
+        assertEquals(ActionType.BONUS_ACTION, rage.actionType)
+        assertEquals(Resource.RAGE, rage.resource)
+        assertEquals(ActionType.ACTION, turnUndead.actionType)
+        assertEquals(Resource.CHANNEL_DIVINITY, turnUndead.resource)
+        assertNull(turnUndead.uses)
+        assertNull(BARBARIAN.features.first { it.id == "BARBARIAN_DANGER_SENSE" }.actionType)
     }
 
     @Test

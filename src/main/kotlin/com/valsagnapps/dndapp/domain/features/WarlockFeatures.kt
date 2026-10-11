@@ -1,6 +1,10 @@
 package com.valsagnapps.dndapp.domain.features
 
+import com.valsagnapps.dndapp.domain.ActionType
 import com.valsagnapps.dndapp.domain.ClassFeature
+import com.valsagnapps.dndapp.domain.Recharge
+import com.valsagnapps.dndapp.domain.Resource
+import com.valsagnapps.dndapp.domain.Uses
 
 // Warlock y sus patrones. Warlock y The Fiend son SRD: llevan el texto del SRD 5.1 además del resumen propio.
 internal val WARLOCK_FEATURES = listOf(
@@ -210,6 +214,8 @@ internal val WARLOCK_FEATURES = listOf(
             "expended spell slots. You can spend 1 minute entreating your patron for aid to regain all your expended " +
             "spell slots from your Pact Magic feature.\n\nOnce you regain spell slots with this feature, you must " +
             "finish a long rest before you can do so again.",
+        resource = Resource.ELDRITCH_MASTER,
+        uses = Uses.fixed(count = 1, recharge = Recharge.LONG_REST),
     ),
 )
 
@@ -237,6 +243,8 @@ internal val FIEND_FEATURES = listOf(
             "check or a saving throw, you can use this feature to add a d10 to your roll. You can do so after seeing " +
             "the initial roll but before any of the roll's effects occur.\n\nOnce you use this feature, you can't " +
             "use it again until you finish a short or long rest.",
+        resource = Resource.DARK_ONES_OWN_LUCK,
+        uses = Uses.fixed(count = 1, recharge = Recharge.SHORT_REST),
     ),
     ClassFeature(
         id = "FIEND_FIENDISH_RESILIENCE",
@@ -264,6 +272,8 @@ internal val FIEND_FEATURES = listOf(
             "the nearest unoccupied space. If the target is not a fiend, it takes 10d10 psychic damage as it reels " +
             "from its horrific experience.\n\nOnce you use this feature, you can't use it again until you finish a " +
             "long rest.",
+        resource = Resource.HURL_THROUGH_HELL,
+        uses = Uses.fixed(count = 1, recharge = Recharge.LONG_REST),
     ),
 )
 
@@ -277,6 +287,9 @@ internal val ARCHFEY_FEATURES = listOf(
         "Action: each creature in a 10-ft cube from you makes a Wisdom save against your spell save DC; on a failure " +
             "it is charmed or frightened by you (your choice) until the end of your next turn. Once per short or " +
             "long rest.",
+        actionType = ActionType.ACTION,
+        resource = Resource.FEY_PRESENCE,
+        uses = Uses.fixed(count = 1, recharge = Recharge.SHORT_REST),
     ),
     ClassFeature(
         id = "ARCHFEY_MISTY_ESCAPE",
@@ -286,6 +299,9 @@ internal val ARCHFEY_FEATURES = listOf(
         "Reaction when you take damage: turn invisible and teleport up to 60 ft to a space you can see. You stay " +
             "invisible until the start of your next turn or until you attack or cast a spell. Once per short or long " +
             "rest.",
+        actionType = ActionType.REACTION,
+        resource = Resource.MISTY_ESCAPE,
+        uses = Uses.fixed(count = 1, recharge = Recharge.SHORT_REST),
     ),
     ClassFeature(
         id = "ARCHFEY_BEGUILING_DEFENSES",
@@ -294,6 +310,7 @@ internal val ARCHFEY_FEATURES = listOf(
         summary =
         "Immunity to being charmed. When a creature tries to charm you, reaction: it makes a Wisdom save or is " +
             "charmed by you for 1 minute or until it takes damage.",
+        actionType = ActionType.REACTION,
     ),
     ClassFeature(
         id = "ARCHFEY_DARK_DELIRIUM",
@@ -303,6 +320,9 @@ internal val ARCHFEY_FEATURES = listOf(
         "Action: a creature within 60 ft makes a Wisdom save; on a failure it is charmed or frightened by you (your " +
             "choice) for 1 minute or until your concentration breaks, lost in an illusory realm where it can only " +
             "see and hear you. It ends early if the creature takes damage. Once per short or long rest.",
+        actionType = ActionType.ACTION,
+        resource = Resource.DARK_DELIRIUM,
+        uses = Uses.fixed(count = 1, recharge = Recharge.SHORT_REST),
     ),
 )
 
@@ -322,6 +342,9 @@ internal val GREAT_OLD_ONE_FEATURES = listOf(
         summary =
         "Reaction when a creature attacks you: impose disadvantage on the roll. If it misses, you have advantage on " +
             "your next attack against it before the end of your next turn. Once per short or long rest.",
+        actionType = ActionType.REACTION,
+        resource = Resource.ENTROPIC_WARD,
+        uses = Uses.fixed(count = 1, recharge = Recharge.SHORT_REST),
     ),
     ClassFeature(
         id = "GREAT_OLD_ONE_THOUGHT_SHIELD",
@@ -339,5 +362,6 @@ internal val GREAT_OLD_ONE_FEATURES = listOf(
         "Action: touch an incapacitated humanoid to charm it until a remove curse is cast on it, the charm is " +
             "removed or you use this feature again. While on the same plane, you can communicate telepathically with " +
             "it.",
+        actionType = ActionType.ACTION,
     ),
 )

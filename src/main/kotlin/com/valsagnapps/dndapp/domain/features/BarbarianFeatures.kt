@@ -1,6 +1,11 @@
 package com.valsagnapps.dndapp.domain.features
 
+import com.valsagnapps.dndapp.domain.ActionType
 import com.valsagnapps.dndapp.domain.ClassFeature
+import com.valsagnapps.dndapp.domain.Recharge
+import com.valsagnapps.dndapp.domain.Resource
+import com.valsagnapps.dndapp.domain.Uses
+import com.valsagnapps.dndapp.domain.atLevel
 
 // Barbarian y sus caminos. Barbarian y Path of the Berserker son SRD: llevan el texto del SRD 5.1 además del
 // resumen propio.
@@ -26,6 +31,17 @@ internal val BARBARIAN_FEATURES = listOf(
             "raged the maximum number of times for your barbarian level, you must finish a long rest before you can " +
             "rage again. You may rage 2 times at 1st level, 3 at 3rd, 4 at 6th, 5 at 12th, and 6 at 17th.\n\nRage " +
             "damage: +2 at 1st level, +3 at 9th level, +4 at 16th level.",
+        actionType = ActionType.BONUS_ACTION,
+        resource = Resource.RAGE,
+        uses = Uses.byLevel(
+            Recharge.LONG_REST,
+            atLevel(level = 1, uses = 2),
+            atLevel(level = 3, uses = 3),
+            atLevel(level = 6, uses = 4),
+            atLevel(level = 12, uses = 5),
+            atLevel(level = 17, uses = 6),
+            atLevel(level = 20, uses = null),
+        ),
     ),
     ClassFeature(
         id = "BARBARIAN_UNARMORED_DEFENSE",
@@ -163,6 +179,7 @@ internal val BERSERKER_FEATURES = listOf(
             "the duration of your rage you can make a single melee weapon attack as a bonus action on each of your " +
             "turns after this one. When your rage ends, you suffer one level of exhaustion (as described in appendix " +
             "A).",
+        actionType = ActionType.BONUS_ACTION,
     ),
     ClassFeature(
         id = "BERSERKER_MINDLESS_RAGE",
@@ -190,6 +207,7 @@ internal val BERSERKER_FEATURES = listOf(
             "turn. This effect ends if the creature ends its turn out of line of sight or more than 60 feet away " +
             "from you.\n\nIf the creature succeeds on its saving throw, you can't use this feature on that creature " +
             "again for 24 hours.",
+        actionType = ActionType.ACTION,
     ),
     ClassFeature(
         id = "BERSERKER_RETALIATION",
@@ -199,6 +217,7 @@ internal val BERSERKER_FEATURES = listOf(
         srdText =
         "Starting at 14th level, when you take damage from a creature that is within 5 feet of you, you can use your " +
             "reaction to make a melee weapon attack against that creature.",
+        actionType = ActionType.REACTION,
     ),
 )
 
