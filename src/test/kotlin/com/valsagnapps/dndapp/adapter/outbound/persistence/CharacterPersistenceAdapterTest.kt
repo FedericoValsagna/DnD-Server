@@ -7,6 +7,7 @@ import com.valsagnapps.dndapp.domain.ClassLevel
 import com.valsagnapps.dndapp.domain.DeathSaves
 import com.valsagnapps.dndapp.domain.HitPoints
 import com.valsagnapps.dndapp.domain.Proficiency
+import com.valsagnapps.dndapp.domain.Resource
 import com.valsagnapps.dndapp.domain.Skill
 import com.valsagnapps.dndapp.domain.SkillProficiencies
 import com.valsagnapps.dndapp.domain.Subclass
@@ -73,6 +74,34 @@ class CharacterPersistenceAdapterTest {
         entityManager.clear()
 
         assertEquals(character, adapter.findById(character.id))
+    }
+
+    @Test
+    fun `saves and loads used resources`() {
+        val character = character(characterClass = CharacterClass.MONK, level = 5)
+            .withResourceUsed(Resource.KI, 3)
+
+        adapter.save(character)
+
+        assertEquals(character, adapter.findById(character.id))
+    }
+
+    @Test
+    fun `replaces used resources and drops the ones the character no longer has`() {
+        val monk = character(
+            classes = listOf(ClassLevel(CharacterClass.MONK, 5), ClassLevel(CharacterClass.FIGHTER, 2)),
+        )
+            .withResourceUsed(Resource.KI, 3)
+            .withResourceUsed(Resource.ACTION_SURGE, 1)
+        adapter.save(monk)
+        entityManager.flush()
+        entityManager.clear()
+
+        adapter.save(monk.withClasses(listOf(ClassLevel(CharacterClass.MONK, 5))).withResourceUsed(Resource.KI, 0))
+        entityManager.flush()
+        entityManager.clear()
+
+        assertEquals(emptyMap(), adapter.findById(monk.id)?.resourcesUsed)
     }
 
     @Test

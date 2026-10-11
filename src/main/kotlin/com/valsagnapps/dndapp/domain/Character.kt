@@ -142,12 +142,12 @@ data class Character(
     val resources: List<CharacterResource>
         get() = CharacterResource.of(classes, abilityScores, resourcesUsed)
 
-    // Marca cuántos usos del recurso lleva gastados (0 los recupera todos).
+    // Marca cuántos usos del recurso lleva gastados (0 los recupera todos y lo saca del mapa).
     fun withResourceUsed(resource: Resource, used: Int): Character {
         val current = resources.find { it.resource == resource }
         require(current != null) { "the character has no $resource" }
         require(used in 0..current.max) { "$resource used must be between 0 and ${current.max}, was $used" }
-        return copy(resourcesUsed = resourcesUsed + (resource to used))
+        return copy(resourcesUsed = if (used == 0) resourcesUsed - resource else resourcesUsed + (resource to used))
     }
 
     fun withMaxHitPoints(maxHitPoints: Int): Character = copy(hitPoints = hitPoints.withMax(maxHitPoints))

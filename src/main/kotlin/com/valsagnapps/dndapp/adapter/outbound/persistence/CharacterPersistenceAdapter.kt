@@ -18,7 +18,7 @@ class CharacterPersistenceAdapter(private val jpaRepository: CharacterJpaReposit
 
     override fun findAll(): List<Character> = jpaRepository.findAll().map { it.toDomain() }
 
-    // Las skills y clases (element collections) se borran con el personaje.
+    // Las skills, clases y recursos (element collections) se borran con el personaje.
     override fun delete(id: CharacterId) = jpaRepository.deleteById(id.value)
 }
 
@@ -40,6 +40,8 @@ private fun Character.toEntity() = CharacterEntity(
     baseSpeed = baseSpeed,
     skills = skillProficiencies.toMap().toMutableMap(),
     classes = classes.map { ClassLevelEmbeddable(it.characterClass, it.level, it.subclass) }.toMutableList(),
+    // Los usados de recursos que ya no tiene (bajó de nivel, cambió de clase) no se guardan.
+    resourcesUsed = resources.filter { it.used > 0 }.associate { it.resource to it.used }.toMutableMap(),
 )
 
 private fun CharacterEntity.toDomain() = Character(
@@ -56,4 +58,5 @@ private fun CharacterEntity.toDomain() = Character(
     skillProficiencies = SkillProficiencies.of(skills),
     armorClassOverride = armorClassOverride,
     baseSpeed = baseSpeed,
+    resourcesUsed = resourcesUsed.toMap(),
 )
