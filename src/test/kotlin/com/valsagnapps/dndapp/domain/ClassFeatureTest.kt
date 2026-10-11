@@ -1,6 +1,7 @@
 package com.valsagnapps.dndapp.domain
 
 import com.valsagnapps.dndapp.domain.CharacterClass.CLERIC
+import com.valsagnapps.dndapp.domain.CharacterClass.DRUID
 import com.valsagnapps.dndapp.domain.CharacterClass.FIGHTER
 import com.valsagnapps.dndapp.domain.CharacterClass.PALADIN
 import com.valsagnapps.dndapp.domain.CharacterClass.RANGER
@@ -82,6 +83,13 @@ class ClassFeatureTest {
     }
 
     @Test
+    fun `druid and its circles have their features loaded`() {
+        assertEquals(7, DRUID.features.size)
+        assertEquals(5, Subclass.LAND.features.size)
+        assertEquals(5, Subclass.MOON.features.size)
+    }
+
+    @Test
     fun `classes without features loaded yet have none`() {
         assertEquals(emptyList(), FIGHTER.features)
         assertEquals(emptyList(), Subclass.CHAMPION.features)
@@ -137,6 +145,8 @@ class ClassFeatureTest {
         assertTrue((WIZARD.features + Subclass.EVOCATION.features).all { it.srdText != null })
         assertTrue((SORCERER.features + Subclass.DRACONIC_BLOODLINE.features).all { it.srdText != null })
         assertTrue(Subclass.WILD_MAGIC.features.all { it.srdText == null })
+        assertTrue((DRUID.features + Subclass.LAND.features).all { it.srdText != null })
+        assertTrue(Subclass.MOON.features.all { it.srdText == null })
         assertTrue(
             Subclass.entries
                 .filter { it.characterClass == WIZARD && it != Subclass.EVOCATION }
