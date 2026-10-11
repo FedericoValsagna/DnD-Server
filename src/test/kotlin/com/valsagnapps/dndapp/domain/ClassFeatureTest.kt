@@ -2,6 +2,7 @@ package com.valsagnapps.dndapp.domain
 
 import com.valsagnapps.dndapp.domain.CharacterClass.CLERIC
 import com.valsagnapps.dndapp.domain.CharacterClass.FIGHTER
+import com.valsagnapps.dndapp.domain.CharacterClass.PALADIN
 import com.valsagnapps.dndapp.domain.CharacterClass.RANGER
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.EnumSource
@@ -56,6 +57,14 @@ class ClassFeatureTest {
     }
 
     @Test
+    fun `paladin and its oaths have their features loaded`() {
+        assertEquals(13, PALADIN.features.size)
+        assertEquals(5, Subclass.DEVOTION.features.size)
+        assertEquals(5, Subclass.ANCIENTS.features.size)
+        assertEquals(5, Subclass.VENGEANCE.features.size)
+    }
+
+    @Test
     fun `classes without features loaded yet have none`() {
         assertEquals(emptyList(), FIGHTER.features)
         assertEquals(emptyList(), Subclass.CHAMPION.features)
@@ -106,5 +115,7 @@ class ClassFeatureTest {
         assertTrue(allFeatures.all { it.source == Source.PHB })
         assertTrue(CLERIC.features.all { it.srdText != null })
         assertTrue(Subclass.NATURE.features.all { it.srdText == null })
+        assertTrue((PALADIN.features + Subclass.DEVOTION.features).all { it.srdText != null })
+        assertTrue((Subclass.ANCIENTS.features + Subclass.VENGEANCE.features).all { it.srdText == null })
     }
 }
