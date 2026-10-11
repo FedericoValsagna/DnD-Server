@@ -4,6 +4,7 @@ import com.valsagnapps.dndapp.domain.CharacterClass.CLERIC
 import com.valsagnapps.dndapp.domain.CharacterClass.FIGHTER
 import com.valsagnapps.dndapp.domain.CharacterClass.PALADIN
 import com.valsagnapps.dndapp.domain.CharacterClass.RANGER
+import com.valsagnapps.dndapp.domain.CharacterClass.SORCERER
 import com.valsagnapps.dndapp.domain.CharacterClass.WIZARD
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.EnumSource
@@ -63,6 +64,13 @@ class ClassFeatureTest {
         assertEquals(5, Subclass.DEVOTION.features.size)
         assertEquals(5, Subclass.ANCIENTS.features.size)
         assertEquals(5, Subclass.VENGEANCE.features.size)
+    }
+
+    @Test
+    fun `sorcerer and its origins have their features loaded`() {
+        assertEquals(5, SORCERER.features.size)
+        assertEquals(5, Subclass.DRACONIC_BLOODLINE.features.size)
+        assertEquals(5, Subclass.WILD_MAGIC.features.size)
     }
 
     @Test
@@ -127,6 +135,8 @@ class ClassFeatureTest {
         assertTrue((PALADIN.features + Subclass.DEVOTION.features).all { it.srdText != null })
         assertTrue((Subclass.ANCIENTS.features + Subclass.VENGEANCE.features).all { it.srdText == null })
         assertTrue((WIZARD.features + Subclass.EVOCATION.features).all { it.srdText != null })
+        assertTrue((SORCERER.features + Subclass.DRACONIC_BLOODLINE.features).all { it.srdText != null })
+        assertTrue(Subclass.WILD_MAGIC.features.all { it.srdText == null })
         assertTrue(
             Subclass.entries
                 .filter { it.characterClass == WIZARD && it != Subclass.EVOCATION }
