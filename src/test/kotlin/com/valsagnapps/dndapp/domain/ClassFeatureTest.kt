@@ -1,6 +1,7 @@
 package com.valsagnapps.dndapp.domain
 
 import com.valsagnapps.dndapp.domain.CharacterClass.BARBARIAN
+import com.valsagnapps.dndapp.domain.CharacterClass.BARD
 import com.valsagnapps.dndapp.domain.CharacterClass.CLERIC
 import com.valsagnapps.dndapp.domain.CharacterClass.DRUID
 import com.valsagnapps.dndapp.domain.CharacterClass.FIGHTER
@@ -107,6 +108,13 @@ class ClassFeatureTest {
     }
 
     @Test
+    fun `bard and its colleges have their features loaded`() {
+        assertEquals(10, BARD.features.size)
+        assertEquals(4, Subclass.LORE.features.size)
+        assertEquals(4, Subclass.VALOR.features.size)
+    }
+
+    @Test
     fun `classes without features loaded yet have none`() {
         assertEquals(emptyList(), FIGHTER.features)
         assertEquals(emptyList(), Subclass.CHAMPION.features)
@@ -166,6 +174,8 @@ class ClassFeatureTest {
         assertTrue(Subclass.MOON.features.all { it.srdText == null })
         assertTrue((MONK.features + Subclass.OPEN_HAND.features).all { it.srdText != null })
         assertTrue((Subclass.SHADOW.features + Subclass.FOUR_ELEMENTS.features).all { it.srdText == null })
+        assertTrue((BARD.features + Subclass.LORE.features).all { it.srdText != null })
+        assertTrue(Subclass.VALOR.features.all { it.srdText == null })
         assertTrue((BARBARIAN.features + Subclass.BERSERKER.features).all { it.srdText != null })
         assertTrue(Subclass.TOTEM_WARRIOR.features.all { it.srdText == null })
         assertTrue(
