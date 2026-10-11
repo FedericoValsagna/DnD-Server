@@ -3,6 +3,7 @@ package com.valsagnapps.dndapp.config
 import com.valsagnapps.dndapp.application.port.outbound.CharacterRepository
 import com.valsagnapps.dndapp.application.service.CharacterService
 import com.valsagnapps.dndapp.application.service.ClassCatalogService
+import com.valsagnapps.dndapp.application.service.CombatService
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
@@ -11,6 +12,9 @@ import org.springframework.context.annotation.Configuration
 class ApplicationConfig {
     @Bean
     fun characterService(characterRepository: CharacterRepository) = CharacterService(characterRepository)
+
+    @Bean
+    fun combatService(characterRepository: CharacterRepository) = CombatService(characterRepository)
 
     @Bean
     fun classCatalogService() = ClassCatalogService()
