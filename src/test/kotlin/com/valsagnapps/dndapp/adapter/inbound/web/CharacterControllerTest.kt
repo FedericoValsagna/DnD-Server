@@ -54,6 +54,16 @@ class CharacterControllerTest {
             jsonPath("$.classes[0].level") { value(5) }
             jsonPath("$.classes[0].hitDie") { value(10) }
             jsonPath("$.maxHitPoints") { value(44) }
+            jsonPath("$.currentHitPoints") { value(44) }
+            jsonPath("$.temporaryHitPoints") { value(0) }
+            jsonPath("$.lifeStatus") { value("CONSCIOUS") }
+            jsonPath("$.deathSaves.successes") { value(0) }
+            jsonPath("$.deathSaves.failures") { value(0) }
+            jsonPath("$.armorClass") { value(10) }
+            jsonPath("$.armorClassOverride") { value(null as Any?) }
+            jsonPath("$.initiative") { value(0) }
+            jsonPath("$.speed") { value(30) }
+            jsonPath("$.baseSpeed") { value(30) }
             jsonPath("$.hitDice[0].die") { value(10) }
             jsonPath("$.hitDice[0].count") { value(5) }
             jsonPath("$.proficiencyBonus") { value(3) }

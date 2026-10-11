@@ -1,0 +1,26 @@
+$kind: http-request
+name: Take damage
+url: "{{baseUrl}}/api/v1/characters/{{characterId}}/damage"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "amount": 50,
+      "critical": false
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      const body = pm.response.json();
+
+      pm.test("temporary hit points absorb first and the rest drops to 0", function () {
+        pm.response.to.have.status(200);
+        pm.expect(body.temporaryHitPoints).to.equal(0);
+        pm.expect(body.currentHitPoints).to.equal(0);
+        pm.expect(body.lifeStatus).to.equal("DYING");
+      });
+order: 68

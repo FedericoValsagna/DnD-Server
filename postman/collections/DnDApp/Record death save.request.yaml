@@ -1,0 +1,24 @@
+$kind: http-request
+name: Record death save
+url: "{{baseUrl}}/api/v1/characters/{{characterId}}/death-saves"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "result": "CRITICAL_FAILURE"
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      const body = pm.response.json();
+
+      pm.test("a natural 1 counts two failures", function () {
+        pm.response.to.have.status(200);
+        pm.expect(body.deathSaves.failures).to.equal(2);
+        pm.expect(body.lifeStatus).to.equal("DYING");
+      });
+order: 70

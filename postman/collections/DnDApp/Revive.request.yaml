@@ -1,0 +1,35 @@
+$kind: http-request
+name: Revive
+url: "{{baseUrl}}/api/v1/characters/{{characterId}}/revive"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "hitPoints": 1
+    }
+scripts:
+  - type: beforeRequest
+    language: text/javascript
+    code: |-
+      // Solo se revive a un muerto: un golpe más (tercer fallo, después de "Record death save") lo mata.
+      pm.sendRequest({
+        url: pm.variables.replaceIn("{{baseUrl}}/api/v1/characters/{{characterId}}/damage"),
+        method: "POST",
+        header: { "Content-Type": "application/json" },
+        body: { mode: "raw", raw: JSON.stringify({ amount: 1 }) },
+      });
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      const body = pm.response.json();
+
+      pm.test("revived with 1 hit point", function () {
+        pm.response.to.have.status(200);
+        pm.expect(body.currentHitPoints).to.equal(1);
+        pm.expect(body.lifeStatus).to.equal("CONSCIOUS");
+        pm.expect(body.deathSaves.failures).to.equal(0);
+      });
+order: 72

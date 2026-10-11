@@ -1,0 +1,23 @@
+$kind: http-request
+name: Set temporary hit points
+url: "{{baseUrl}}/api/v1/characters/{{characterId}}/temporary-hit-points"
+method: PUT
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "temporaryHitPoints": 5
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      const body = pm.response.json();
+
+      pm.test("temporary hit points replaced", function () {
+        pm.response.to.have.status(200);
+        pm.expect(body.temporaryHitPoints).to.equal(5);
+      });
+order: 66
