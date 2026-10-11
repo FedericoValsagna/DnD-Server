@@ -13,6 +13,8 @@ data class Character(
     val armorClassOverride: Int? = null,
     // Se carga a mano hasta que existan las razas, que la van a dar.
     val baseSpeed: Int = DEFAULT_SPEED,
+    // Usos gastados de cada recurso; los que no están, sin gastar.
+    val resourcesUsed: Map<Resource, Int> = emptyMap(),
 ) {
     init {
         require(name.isNotBlank()) { "name must not be blank" }
@@ -24,6 +26,7 @@ data class Character(
             "armor class must be between $MIN_ARMOR_CLASS and $MAX_ARMOR_CLASS, was $armorClassOverride"
         }
         require(baseSpeed in 0..MAX_SPEED) { "speed must be between 0 and $MAX_SPEED, was $baseSpeed" }
+        require(resourcesUsed.values.all { it >= 0 }) { "used resources can't be negative" }
     }
 
     val maxHitPoints: Int
@@ -134,6 +137,18 @@ data class Character(
 
     private val fastMovement: Int
         get() = if (levelIn(CharacterClass.BARBARIAN) >= FAST_MOVEMENT_LEVEL) FAST_MOVEMENT_BONUS else 0
+
+    // Recursos con usos que dan sus features, con el máximo calculado y los usados.
+    val resources: List<CharacterResource>
+        get() = CharacterResource.of(classes, abilityScores, resourcesUsed)
+
+    // Marca cuántos usos del recurso lleva gastados (0 los recupera todos).
+    fun withResourceUsed(resource: Resource, used: Int): Character {
+        val current = resources.find { it.resource == resource }
+        require(current != null) { "the character has no $resource" }
+        require(used in 0..current.max) { "$resource used must be between 0 and ${current.max}, was $used" }
+        return copy(resourcesUsed = resourcesUsed + (resource to used))
+    }
 
     fun withMaxHitPoints(maxHitPoints: Int): Character = copy(hitPoints = hitPoints.withMax(maxHitPoints))
 
