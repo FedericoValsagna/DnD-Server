@@ -226,3 +226,223 @@ internal val NATURE_FEATURES = listOf(
             "what it does on its next turn.",
     ),
 )
+
+// Knowledge, Light, Tempest, Trickery y War no son SRD: solo resúmenes propios.
+internal val KNOWLEDGE_FEATURES = listOf(
+    ClassFeature(
+        id = "KNOWLEDGE_BLESSINGS_OF_KNOWLEDGE",
+        name = "Blessings of Knowledge",
+        level = 1,
+        summary =
+        "Learn two languages and gain proficiency in two skills among Arcana, History, Nature and Religion, with " +
+            "double proficiency bonus on checks with them.",
+    ),
+    ClassFeature(
+        id = "KNOWLEDGE_KNOWLEDGE_OF_THE_AGES",
+        name = "Channel Divinity: Knowledge of the Ages",
+        level = 2,
+        summary = "Action: gain proficiency with one skill or tool of your choice for 10 minutes.",
+    ),
+    ClassFeature(
+        id = "KNOWLEDGE_READ_THOUGHTS",
+        name = "Channel Divinity: Read Thoughts",
+        level = 6,
+        summary =
+        "Action: a creature within 60 ft makes a Wisdom save. On a failure you read its surface thoughts for 1 " +
+            "minute while it stays within 60 ft, and during that time you can use an action to end the effect and " +
+            "cast suggestion on it without a slot; it fails the save automatically. On a success you can't try again " +
+            "on it until a long rest.",
+    ),
+    ClassFeature(
+        id = "KNOWLEDGE_POTENT_SPELLCASTING",
+        name = "Potent Spellcasting",
+        level = 8,
+        summary = "Add your Wisdom modifier to the damage of your cleric cantrips.",
+    ),
+    ClassFeature(
+        id = "KNOWLEDGE_VISIONS_OF_THE_PAST",
+        name = "Visions of the Past",
+        level = 17,
+        summary =
+        "Meditate (concentrating, as with a spell) for at least 1 minute and up to your Wisdom score in minutes to " +
+            "see glimpses of the past. Object reading: holding an object, you see its previous owner and how it got " +
+            "and lost it, plus a recent significant event involving it. Area reading: for each minute, one " +
+            "significant event in your surroundings, from the most recent back to as many days ago as your Wisdom " +
+            "score. Once per short or long rest.",
+    ),
+)
+
+internal val LIGHT_FEATURES = listOf(
+    ClassFeature(
+        id = "LIGHT_BONUS_CANTRIP",
+        name = "Bonus Cantrip",
+        level = 1,
+        summary = "You learn the light cantrip, if you don't know it already.",
+    ),
+    ClassFeature(
+        id = "LIGHT_WARDING_FLARE",
+        name = "Warding Flare",
+        level = 1,
+        summary =
+        "Reaction when a creature you can see within 30 ft attacks you: impose disadvantage on the roll (creatures " +
+            "that can't be blinded are immune). Uses equal to your Wisdom modifier (minimum 1) per long rest.",
+    ),
+    ClassFeature(
+        id = "LIGHT_RADIANCE_OF_THE_DAWN",
+        name = "Channel Divinity: Radiance of the Dawn",
+        level = 2,
+        summary =
+        "Action: dispel magical darkness within 30 ft, and each hostile creature within 30 ft makes a Constitution " +
+            "save, taking 2d10 + cleric level radiant damage on a failure or half on a success. Total cover " +
+            "protects.",
+    ),
+    ClassFeature(
+        id = "LIGHT_IMPROVED_FLARE",
+        name = "Improved Flare",
+        level = 6,
+        summary =
+        "You can also use Warding Flare when a creature you can see within 30 ft attacks someone other than you.",
+    ),
+    ClassFeature(
+        id = "LIGHT_POTENT_SPELLCASTING",
+        name = "Potent Spellcasting",
+        level = 8,
+        summary = "Add your Wisdom modifier to the damage of your cleric cantrips.",
+    ),
+    ClassFeature(
+        id = "LIGHT_CORONA_OF_LIGHT",
+        name = "Corona of Light",
+        level = 17,
+        summary =
+        "Action: emit an aura of sunlight for 1 minute or until you dismiss it (bright light in 60 ft, dim light 30 " +
+            "ft more). Your enemies in the bright light have disadvantage on saves against spells that deal fire or " +
+            "radiant damage.",
+    ),
+)
+
+internal val TEMPEST_FEATURES = listOf(
+    ClassFeature(
+        id = "TEMPEST_BONUS_PROFICIENCIES",
+        name = "Bonus Proficiencies",
+        level = 1,
+        summary = "Proficiency with martial weapons and heavy armor.",
+    ),
+    ClassFeature(
+        id = "TEMPEST_WRATH_OF_THE_STORM",
+        name = "Wrath of the Storm",
+        level = 1,
+        summary =
+        "Reaction when a creature within 5 ft that you can see hits you: it makes a Dexterity save, taking 2d8 " +
+            "lightning or thunder damage (your choice) on a failure or half on a success. Uses equal to your Wisdom " +
+            "modifier (minimum 1) per long rest.",
+    ),
+    ClassFeature(
+        id = "TEMPEST_DESTRUCTIVE_WRATH",
+        name = "Channel Divinity: Destructive Wrath",
+        level = 2,
+        summary = "When you roll lightning or thunder damage, deal the maximum instead of rolling.",
+    ),
+    ClassFeature(
+        id = "TEMPEST_THUNDERBOLT_STRIKE",
+        name = "Thunderbolt Strike",
+        level = 6,
+        summary =
+        "When you deal lightning damage to a Large or smaller creature, you can push it up to 10 ft away from you.",
+    ),
+    ClassFeature(
+        id = "TEMPEST_DIVINE_STRIKE",
+        name = "Divine Strike",
+        level = 8,
+        summary = "Once on each of your turns, a weapon hit deals an extra 1d8 thunder damage, 2d8 from 14th level.",
+    ),
+    ClassFeature(
+        id = "TEMPEST_STORMBORN",
+        name = "Stormborn",
+        level = 17,
+        summary = "Flying speed equal to your walking speed while you aren't underground or indoors.",
+    ),
+)
+
+internal val TRICKERY_FEATURES = listOf(
+    ClassFeature(
+        id = "TRICKERY_BLESSING_OF_THE_TRICKSTER",
+        name = "Blessing of the Trickster",
+        level = 1,
+        summary =
+        "Action: a willing creature you touch, other than you, has advantage on Dexterity (Stealth) checks for 1 " +
+            "hour or until you use this feature again.",
+    ),
+    ClassFeature(
+        id = "TRICKERY_INVOKE_DUPLICITY",
+        name = "Channel Divinity: Invoke Duplicity",
+        level = 2,
+        summary =
+        "Action: create an illusory duplicate of yourself within 30 ft, for 1 minute with concentration. Bonus " +
+            "action: move it up to 30 ft (it must stay within 120 ft). You can cast spells as if you were in its " +
+            "space, and you have advantage on attacks against a creature that is within 5 ft of both you and the " +
+            "duplicate.",
+    ),
+    ClassFeature(
+        id = "TRICKERY_CLOAK_OF_SHADOWS",
+        name = "Channel Divinity: Cloak of Shadows",
+        level = 6,
+        summary = "Action: become invisible until the end of your next turn or until you attack or cast a spell.",
+    ),
+    ClassFeature(
+        id = "TRICKERY_DIVINE_STRIKE",
+        name = "Divine Strike",
+        level = 8,
+        summary = "Once on each of your turns, a weapon hit deals an extra 1d8 poison damage, 2d8 from 14th level.",
+    ),
+    ClassFeature(
+        id = "TRICKERY_IMPROVED_DUPLICITY",
+        name = "Improved Duplicity",
+        level = 17,
+        summary = "Invoke Duplicity creates up to four duplicates, and a single bonus action moves any of them.",
+    ),
+)
+
+internal val WAR_FEATURES = listOf(
+    ClassFeature(
+        id = "WAR_BONUS_PROFICIENCIES",
+        name = "Bonus Proficiencies",
+        level = 1,
+        summary = "Proficiency with martial weapons and heavy armor.",
+    ),
+    ClassFeature(
+        id = "WAR_WAR_PRIEST",
+        name = "War Priest",
+        level = 1,
+        summary =
+        "When you take the Attack action, you can make one weapon attack as a bonus action. Uses equal to your " +
+            "Wisdom modifier (minimum 1) per long rest.",
+    ),
+    ClassFeature(
+        id = "WAR_GUIDED_STRIKE",
+        name = "Channel Divinity: Guided Strike",
+        level = 2,
+        summary = "+10 to one of your attack rolls, chosen after seeing the roll but before knowing if it hits.",
+    ),
+    ClassFeature(
+        id = "WAR_WAR_GODS_BLESSING",
+        name = "Channel Divinity: War God's Blessing",
+        level = 6,
+        summary =
+        "Reaction when a creature within 30 ft makes an attack roll: give it +10, after seeing the roll but before " +
+            "knowing if it hits.",
+    ),
+    ClassFeature(
+        id = "WAR_DIVINE_STRIKE",
+        name = "Divine Strike",
+        level = 8,
+        summary =
+        "Once on each of your turns, a weapon hit deals an extra 1d8 damage of the same type as the weapon's damage, " +
+            "2d8 from 14th level.",
+    ),
+    ClassFeature(
+        id = "WAR_AVATAR_OF_BATTLE",
+        name = "Avatar of Battle",
+        level = 17,
+        summary = "Resistance to bludgeoning, piercing and slashing damage from nonmagical weapons.",
+    ),
+)

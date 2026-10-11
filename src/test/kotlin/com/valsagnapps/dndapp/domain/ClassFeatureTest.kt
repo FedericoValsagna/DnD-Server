@@ -61,6 +61,11 @@ class ClassFeatureTest {
         assertEquals(12, RANGER.features.size)
         assertEquals(6, Subclass.LIFE.features.size)
         assertEquals(6, Subclass.NATURE.features.size)
+        assertEquals(5, Subclass.KNOWLEDGE.features.size)
+        assertEquals(6, Subclass.LIGHT.features.size)
+        assertEquals(6, Subclass.TEMPEST.features.size)
+        assertEquals(5, Subclass.TRICKERY.features.size)
+        assertEquals(6, Subclass.WAR.features.size)
         assertEquals(4, Subclass.HUNTER.features.size)
     }
 
@@ -189,7 +194,11 @@ class ClassFeatureTest {
     fun `features mark whether they come with the SRD text`() {
         assertTrue(allFeatures.all { it.source == Source.PHB })
         assertTrue(CLERIC.features.all { it.srdText != null })
-        assertTrue(Subclass.NATURE.features.all { it.srdText == null })
+        assertTrue(
+            Subclass.entries
+                .filter { it.characterClass == CLERIC && it != Subclass.LIFE }
+                .all { domain -> domain.features.all { it.srdText == null } },
+        )
         assertTrue((PALADIN.features + Subclass.DEVOTION.features).all { it.srdText != null })
         assertTrue((Subclass.ANCIENTS.features + Subclass.VENGEANCE.features).all { it.srdText == null })
         assertTrue((WIZARD.features + Subclass.EVOCATION.features).all { it.srdText != null })
