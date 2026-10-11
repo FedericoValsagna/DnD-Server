@@ -1,0 +1,21 @@
+$kind: http-request
+name: Update name
+url: "{{baseUrl}}/api/v1/characters/{{characterId}}/name"
+method: PUT
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "name": "Tordek the Bold"
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("name updated", function () {
+        pm.response.to.have.status(200);
+        pm.expect(pm.response.json().name).to.equal("Tordek the Bold");
+      });
+order: 62
