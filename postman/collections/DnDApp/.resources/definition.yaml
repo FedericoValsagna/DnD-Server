@@ -6,6 +6,8 @@ description: |-
   (antes le pega otra vez para matarlo) y curar. Sueltos, pueden dar 409.
   "Delete character" va último porque borra ese personaje.
   characterClass es la clase a la que "Update subclass" le elige subclase (FIGHTER, que deja "Update classes").
+  resource es el recurso que gasta "Update resource" (CHANNEL_DIVINITY, del Cleric 2 que deja "Update classes").
 variables:
   characterId: ""
   characterClass: "FIGHTER"
+  resource: "CHANNEL_DIVINITY"

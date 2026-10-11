@@ -1,0 +1,25 @@
+$kind: http-request
+name: Update resource
+url: "{{baseUrl}}/api/v1/characters/{{characterId}}/resources/{{resource}}"
+method: PUT
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "used": 1
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      const body = pm.response.json();
+      const resource = body.resources.find(r => r.id === pm.collectionVariables.get("resource"));
+
+      pm.test("the resource has one use spent", function () {
+        pm.response.to.have.status(200);
+        pm.expect(resource.used).to.equal(1);
+        pm.expect(resource.max).to.be.at.least(1);
+      });
+order: 80
