@@ -1,5 +1,6 @@
 package com.valsagnapps.dndapp.domain
 
+import com.valsagnapps.dndapp.domain.CharacterClass.BARBARIAN
 import com.valsagnapps.dndapp.domain.CharacterClass.CLERIC
 import com.valsagnapps.dndapp.domain.CharacterClass.DRUID
 import com.valsagnapps.dndapp.domain.CharacterClass.FIGHTER
@@ -99,6 +100,13 @@ class ClassFeatureTest {
     }
 
     @Test
+    fun `barbarian and its paths have their features loaded`() {
+        assertEquals(13, BARBARIAN.features.size)
+        assertEquals(4, Subclass.BERSERKER.features.size)
+        assertEquals(5, Subclass.TOTEM_WARRIOR.features.size)
+    }
+
+    @Test
     fun `classes without features loaded yet have none`() {
         assertEquals(emptyList(), FIGHTER.features)
         assertEquals(emptyList(), Subclass.CHAMPION.features)
@@ -158,6 +166,8 @@ class ClassFeatureTest {
         assertTrue(Subclass.MOON.features.all { it.srdText == null })
         assertTrue((MONK.features + Subclass.OPEN_HAND.features).all { it.srdText != null })
         assertTrue((Subclass.SHADOW.features + Subclass.FOUR_ELEMENTS.features).all { it.srdText == null })
+        assertTrue((BARBARIAN.features + Subclass.BERSERKER.features).all { it.srdText != null })
+        assertTrue(Subclass.TOTEM_WARRIOR.features.all { it.srdText == null })
         assertTrue(
             Subclass.entries
                 .filter { it.characterClass == WIZARD && it != Subclass.EVOCATION }
