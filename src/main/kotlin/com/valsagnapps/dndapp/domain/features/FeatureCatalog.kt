@@ -9,6 +9,7 @@ internal val CLASS_FEATURES: Map<CharacterClass, List<ClassFeature>> = mapOf(
     CharacterClass.CLERIC to CLERIC_FEATURES,
     CharacterClass.PALADIN to PALADIN_FEATURES,
     CharacterClass.RANGER to RANGER_FEATURES,
+    CharacterClass.WIZARD to WIZARD_FEATURES,
 )
 
 internal val SUBCLASS_FEATURES: Map<Subclass, List<ClassFeature>> = mapOf(
@@ -18,4 +19,12 @@ internal val SUBCLASS_FEATURES: Map<Subclass, List<ClassFeature>> = mapOf(
     Subclass.DEVOTION to DEVOTION_FEATURES,
     Subclass.ANCIENTS to ANCIENTS_FEATURES,
     Subclass.VENGEANCE to VENGEANCE_FEATURES,
+    Subclass.ABJURATION to ABJURATION_FEATURES,
+    Subclass.CONJURATION to CONJURATION_FEATURES,
+    Subclass.DIVINATION to DIVINATION_FEATURES,
+    Subclass.ENCHANTMENT to ENCHANTMENT_FEATURES,
+    Subclass.EVOCATION to EVOCATION_FEATURES,
+    Subclass.ILLUSION to ILLUSION_FEATURES,
+    Subclass.NECROMANCY to NECROMANCY_FEATURES,
+    Subclass.TRANSMUTATION to TRANSMUTATION_FEATURES,
 )

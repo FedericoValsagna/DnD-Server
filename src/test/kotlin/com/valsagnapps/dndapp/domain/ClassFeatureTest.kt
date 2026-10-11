@@ -4,6 +4,7 @@ import com.valsagnapps.dndapp.domain.CharacterClass.CLERIC
 import com.valsagnapps.dndapp.domain.CharacterClass.FIGHTER
 import com.valsagnapps.dndapp.domain.CharacterClass.PALADIN
 import com.valsagnapps.dndapp.domain.CharacterClass.RANGER
+import com.valsagnapps.dndapp.domain.CharacterClass.WIZARD
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.EnumSource
 import kotlin.test.Test
@@ -65,6 +66,14 @@ class ClassFeatureTest {
     }
 
     @Test
+    fun `wizard and its schools have their features loaded`() {
+        assertEquals(5, WIZARD.features.size)
+        Subclass.entries.filter { it.characterClass == WIZARD }.forEach {
+            assertEquals(5, it.features.size, it.name)
+        }
+    }
+
+    @Test
     fun `classes without features loaded yet have none`() {
         assertEquals(emptyList(), FIGHTER.features)
         assertEquals(emptyList(), Subclass.CHAMPION.features)
@@ -117,5 +126,11 @@ class ClassFeatureTest {
         assertTrue(Subclass.NATURE.features.all { it.srdText == null })
         assertTrue((PALADIN.features + Subclass.DEVOTION.features).all { it.srdText != null })
         assertTrue((Subclass.ANCIENTS.features + Subclass.VENGEANCE.features).all { it.srdText == null })
+        assertTrue((WIZARD.features + Subclass.EVOCATION.features).all { it.srdText != null })
+        assertTrue(
+            Subclass.entries
+                .filter { it.characterClass == WIZARD && it != Subclass.EVOCATION }
+                .all { school -> school.features.all { it.srdText == null } },
+        )
     }
 }
