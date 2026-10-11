@@ -12,6 +12,7 @@ import com.valsagnapps.dndapp.domain.abilityScores
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.test.assertNull
 
 class CharacterServiceTest {
     private val repository = InMemoryCharacterRepository()
@@ -153,5 +154,62 @@ class CharacterServiceTest {
     @Test
     fun `fails to update hit points when the character does not exist`() {
         assertFailsWith<CharacterNotFoundException> { service.updateMaxHitPoints(CharacterId.new(), 10) }
+    }
+
+    @Test
+    fun `renames a character`() {
+        val created = service.create(createCommand("Krusk"))
+
+        val updated = service.updateName(created.id, "Krusk the Bold")
+
+        assertEquals("Krusk the Bold", updated.name)
+        assertEquals(created.copy(name = "Krusk the Bold"), repository.findById(created.id))
+    }
+
+    @Test
+    fun `rejects a blank name`() {
+        val created = service.create(createCommand("Krusk"))
+
+        assertFailsWith<IllegalArgumentException> { service.updateName(created.id, " ") }
+        assertEquals(created, repository.findById(created.id))
+    }
+
+    @Test
+    fun `fails to rename when the character does not exist`() {
+        assertFailsWith<CharacterNotFoundException> { service.updateName(CharacterId.new(), "Krusk") }
+    }
+
+    @Test
+    fun `replaces the ability scores of a character`() {
+        val created = service.create(createCommand("Mialee", abilityScores = abilityScores(intelligence = 15)))
+        val newScores = abilityScores(intelligence = 16, dexterity = 14)
+
+        val updated = service.updateAbilityScores(created.id, newScores)
+
+        assertEquals(newScores, updated.abilityScores)
+        assertEquals(created.copy(abilityScores = newScores), repository.findById(created.id))
+    }
+
+    @Test
+    fun `fails to update ability scores when the character does not exist`() {
+        assertFailsWith<CharacterNotFoundException> {
+            service.updateAbilityScores(CharacterId.new(), abilityScores())
+        }
+    }
+
+    @Test
+    fun `deletes a character`() {
+        val deleted = service.create(createCommand("Mialee"))
+        val kept = service.create(createCommand("Tordek"))
+
+        service.delete(deleted.id)
+
+        assertNull(repository.findById(deleted.id))
+        assertEquals(listOf(kept), service.list())
+    }
+
+    @Test
+    fun `fails to delete when the character does not exist`() {
+        assertFailsWith<CharacterNotFoundException> { service.delete(CharacterId.new()) }
     }
 }

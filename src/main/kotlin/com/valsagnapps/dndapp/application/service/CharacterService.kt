@@ -2,13 +2,17 @@ package com.valsagnapps.dndapp.application.service
 
 import com.valsagnapps.dndapp.application.port.inbound.CreateCharacterCommand
 import com.valsagnapps.dndapp.application.port.inbound.CreateCharacterUseCase
+import com.valsagnapps.dndapp.application.port.inbound.DeleteCharacterUseCase
 import com.valsagnapps.dndapp.application.port.inbound.GetCharacterUseCase
 import com.valsagnapps.dndapp.application.port.inbound.ListCharactersUseCase
+import com.valsagnapps.dndapp.application.port.inbound.UpdateAbilityScoresUseCase
 import com.valsagnapps.dndapp.application.port.inbound.UpdateClassesUseCase
 import com.valsagnapps.dndapp.application.port.inbound.UpdateHitPointsUseCase
+import com.valsagnapps.dndapp.application.port.inbound.UpdateNameUseCase
 import com.valsagnapps.dndapp.application.port.inbound.UpdateSkillsUseCase
 import com.valsagnapps.dndapp.application.port.inbound.UpdateSubclassUseCase
 import com.valsagnapps.dndapp.application.port.outbound.CharacterRepository
+import com.valsagnapps.dndapp.domain.AbilityScores
 import com.valsagnapps.dndapp.domain.Character
 import com.valsagnapps.dndapp.domain.CharacterClass
 import com.valsagnapps.dndapp.domain.CharacterId
@@ -24,7 +28,10 @@ class CharacterService(private val characterRepository: CharacterRepository) :
     UpdateSkillsUseCase,
     UpdateClassesUseCase,
     UpdateSubclassUseCase,
-    UpdateHitPointsUseCase {
+    UpdateHitPointsUseCase,
+    UpdateNameUseCase,
+    UpdateAbilityScoresUseCase,
+    DeleteCharacterUseCase {
     override fun create(command: CreateCharacterCommand): Character = characterRepository.save(
         Character(
             id = CharacterId.new(),
@@ -52,4 +59,13 @@ class CharacterService(private val characterRepository: CharacterRepository) :
 
     override fun updateMaxHitPoints(id: CharacterId, maxHitPoints: Int): Character =
         characterRepository.save(get(id).copy(maxHitPoints = maxHitPoints))
+
+    override fun updateName(id: CharacterId, name: String): Character =
+        characterRepository.save(get(id).copy(name = name))
+
+    override fun updateAbilityScores(id: CharacterId, abilityScores: AbilityScores): Character =
+        characterRepository.save(get(id).copy(abilityScores = abilityScores))
+
+    // Borra el personaje con todo lo suyo (skills y clases). 404 si no existe.
+    override fun delete(id: CharacterId) = characterRepository.delete(get(id).id)
 }
