@@ -9,6 +9,7 @@ import com.valsagnapps.dndapp.domain.Character
 import com.valsagnapps.dndapp.domain.CharacterClass
 import com.valsagnapps.dndapp.domain.ClassFeature
 import com.valsagnapps.dndapp.domain.ClassLevel
+import com.valsagnapps.dndapp.domain.HitPoints
 import com.valsagnapps.dndapp.domain.Proficiencies
 import com.valsagnapps.dndapp.domain.Proficiency
 import com.valsagnapps.dndapp.domain.Skill
@@ -32,8 +33,8 @@ private const val MIN_LEVEL = Character.MIN_LEVEL.toLong()
 private const val MAX_LEVEL = Character.MAX_LEVEL.toLong()
 private const val MIN_SCORE = AbilityScores.MIN_SCORE.toLong()
 private const val MAX_SCORE = AbilityScores.MAX_SCORE.toLong()
-private const val MIN_HIT_POINTS = Character.MIN_HIT_POINTS.toLong()
-private const val MAX_HIT_POINTS = Character.MAX_HIT_POINTS.toLong()
+private const val MIN_HIT_POINTS = HitPoints.MIN_MAX.toLong()
+private const val MAX_HIT_POINTS = HitPoints.MAX_MAX.toLong()
 
 data class CreateCharacterRequest(
     @field:NotBlank @field:Size(max = Character.MAX_NAME_LENGTH) val name: String,

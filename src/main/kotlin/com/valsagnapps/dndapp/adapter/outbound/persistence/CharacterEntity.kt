@@ -1,5 +1,6 @@
 package com.valsagnapps.dndapp.adapter.outbound.persistence
 
+import com.valsagnapps.dndapp.domain.LifeStatus
 import com.valsagnapps.dndapp.domain.Proficiency
 import com.valsagnapps.dndapp.domain.Skill
 import jakarta.persistence.CollectionTable
@@ -29,6 +30,14 @@ class CharacterEntity(
     val wisdom: Int,
     val charisma: Int,
     val maxHitPoints: Int,
+    val currentHitPoints: Int,
+    val temporaryHitPoints: Int,
+    @Enumerated(EnumType.STRING)
+    val lifeStatus: LifeStatus,
+    val deathSaveSuccesses: Int,
+    val deathSaveFailures: Int,
+    val armorClassOverride: Int?,
+    val baseSpeed: Int,
     // EAGER porque open-in-view está apagado: el mapeo a dominio pasa fuera de la transacción.
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "character_skills", joinColumns = [JoinColumn(name = "character_id")])

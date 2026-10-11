@@ -4,6 +4,9 @@ import com.valsagnapps.dndapp.TestcontainersConfiguration
 import com.valsagnapps.dndapp.domain.CharacterClass
 import com.valsagnapps.dndapp.domain.CharacterId
 import com.valsagnapps.dndapp.domain.ClassLevel
+import com.valsagnapps.dndapp.domain.DeathSaves
+import com.valsagnapps.dndapp.domain.HitPoints
+import com.valsagnapps.dndapp.domain.LifeStatus
 import com.valsagnapps.dndapp.domain.Proficiency
 import com.valsagnapps.dndapp.domain.Skill
 import com.valsagnapps.dndapp.domain.SkillProficiencies
@@ -48,6 +51,28 @@ class CharacterPersistenceAdapterTest {
         )
 
         adapter.save(character)
+
+        assertEquals(character, adapter.findById(character.id))
+    }
+
+    @Test
+    fun `saves and loads the combat state`() {
+        val character = character(
+            maxHitPoints = 30,
+            hitPoints = HitPoints(
+                max = 30,
+                current = 0,
+                temporary = 4,
+                status = LifeStatus.DYING,
+                deathSaves = DeathSaves(successes = 2, failures = 1),
+            ),
+            armorClassOverride = 18,
+            baseSpeed = 25,
+        )
+
+        adapter.save(character)
+        entityManager.flush()
+        entityManager.clear()
 
         assertEquals(character, adapter.findById(character.id))
     }
@@ -122,7 +147,7 @@ class CharacterPersistenceAdapterTest {
         entityManager.flush()
         entityManager.clear()
 
-        val updated = character.copy(classes = listOf(ClassLevel(CharacterClass.RANGER, 5)), maxHitPoints = 42)
+        val updated = character.copy(classes = listOf(ClassLevel(CharacterClass.RANGER, 5))).withMaxHitPoints(42)
         adapter.save(updated)
         entityManager.flush()
         entityManager.clear()
