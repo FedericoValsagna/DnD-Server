@@ -3,6 +3,7 @@ package com.valsagnapps.dndapp.domain
 import com.valsagnapps.dndapp.domain.CharacterClass.CLERIC
 import com.valsagnapps.dndapp.domain.CharacterClass.DRUID
 import com.valsagnapps.dndapp.domain.CharacterClass.FIGHTER
+import com.valsagnapps.dndapp.domain.CharacterClass.MONK
 import com.valsagnapps.dndapp.domain.CharacterClass.PALADIN
 import com.valsagnapps.dndapp.domain.CharacterClass.RANGER
 import com.valsagnapps.dndapp.domain.CharacterClass.SORCERER
@@ -90,6 +91,14 @@ class ClassFeatureTest {
     }
 
     @Test
+    fun `monk and its traditions have their features loaded`() {
+        assertEquals(21, MONK.features.size)
+        assertEquals(4, Subclass.OPEN_HAND.features.size)
+        assertEquals(4, Subclass.SHADOW.features.size)
+        assertEquals(1, Subclass.FOUR_ELEMENTS.features.size)
+    }
+
+    @Test
     fun `classes without features loaded yet have none`() {
         assertEquals(emptyList(), FIGHTER.features)
         assertEquals(emptyList(), Subclass.CHAMPION.features)
@@ -147,6 +156,8 @@ class ClassFeatureTest {
         assertTrue(Subclass.WILD_MAGIC.features.all { it.srdText == null })
         assertTrue((DRUID.features + Subclass.LAND.features).all { it.srdText != null })
         assertTrue(Subclass.MOON.features.all { it.srdText == null })
+        assertTrue((MONK.features + Subclass.OPEN_HAND.features).all { it.srdText != null })
+        assertTrue((Subclass.SHADOW.features + Subclass.FOUR_ELEMENTS.features).all { it.srdText == null })
         assertTrue(
             Subclass.entries
                 .filter { it.characterClass == WIZARD && it != Subclass.EVOCATION }
