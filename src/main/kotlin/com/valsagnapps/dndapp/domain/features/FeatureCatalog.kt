@@ -4,7 +4,8 @@ import com.valsagnapps.dndapp.domain.CharacterClass
 import com.valsagnapps.dndapp.domain.ClassFeature
 import com.valsagnapps.dndapp.domain.Subclass
 
-// Features por clase y subclase, en orden de nivel. Las clases y subclases sin cargar todavía no tienen features.
+// Features por clase y subclase, en orden de nivel. Están todas las del PHB; una clase o subclase que no figure acá
+// (por ejemplo, de un libro nuevo todavía sin cargar) no tiene features.
 internal val CLASS_FEATURES: Map<CharacterClass, List<ClassFeature>> = mapOf(
     CharacterClass.BARBARIAN to BARBARIAN_FEATURES,
     CharacterClass.BARD to BARD_FEATURES,
@@ -14,7 +15,9 @@ internal val CLASS_FEATURES: Map<CharacterClass, List<ClassFeature>> = mapOf(
     CharacterClass.MONK to MONK_FEATURES,
     CharacterClass.PALADIN to PALADIN_FEATURES,
     CharacterClass.RANGER to RANGER_FEATURES,
+    CharacterClass.ROGUE to ROGUE_FEATURES,
     CharacterClass.SORCERER to SORCERER_FEATURES,
+    CharacterClass.WARLOCK to WARLOCK_FEATURES,
     CharacterClass.WIZARD to WIZARD_FEATURES,
 )
 
@@ -24,7 +27,12 @@ internal val SUBCLASS_FEATURES: Map<Subclass, List<ClassFeature>> = mapOf(
     Subclass.LORE to LORE_FEATURES,
     Subclass.VALOR to VALOR_FEATURES,
     Subclass.LIFE to LIFE_FEATURES,
+    Subclass.KNOWLEDGE to KNOWLEDGE_FEATURES,
+    Subclass.LIGHT to LIGHT_FEATURES,
     Subclass.NATURE to NATURE_FEATURES,
+    Subclass.TEMPEST to TEMPEST_FEATURES,
+    Subclass.TRICKERY to TRICKERY_FEATURES,
+    Subclass.WAR to WAR_FEATURES,
     Subclass.LAND to LAND_FEATURES,
     Subclass.MOON to MOON_FEATURES,
     Subclass.CHAMPION to CHAMPION_FEATURES,
@@ -34,11 +42,18 @@ internal val SUBCLASS_FEATURES: Map<Subclass, List<ClassFeature>> = mapOf(
     Subclass.SHADOW to SHADOW_FEATURES,
     Subclass.FOUR_ELEMENTS to FOUR_ELEMENTS_FEATURES,
     Subclass.HUNTER to HUNTER_FEATURES,
+    Subclass.BEAST_MASTER to BEAST_MASTER_FEATURES,
+    Subclass.THIEF to THIEF_FEATURES,
+    Subclass.ASSASSIN to ASSASSIN_FEATURES,
+    Subclass.ARCANE_TRICKSTER to ARCANE_TRICKSTER_FEATURES,
     Subclass.DEVOTION to DEVOTION_FEATURES,
     Subclass.ANCIENTS to ANCIENTS_FEATURES,
     Subclass.VENGEANCE to VENGEANCE_FEATURES,
     Subclass.DRACONIC_BLOODLINE to DRACONIC_BLOODLINE_FEATURES,
     Subclass.WILD_MAGIC to WILD_MAGIC_FEATURES,
+    Subclass.ARCHFEY to ARCHFEY_FEATURES,
+    Subclass.FIEND to FIEND_FEATURES,
+    Subclass.GREAT_OLD_ONE to GREAT_OLD_ONE_FEATURES,
     Subclass.ABJURATION to ABJURATION_FEATURES,
     Subclass.CONJURATION to CONJURATION_FEATURES,
     Subclass.DIVINATION to DIVINATION_FEATURES,

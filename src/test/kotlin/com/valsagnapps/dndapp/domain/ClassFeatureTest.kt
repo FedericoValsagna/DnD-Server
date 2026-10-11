@@ -10,6 +10,7 @@ import com.valsagnapps.dndapp.domain.CharacterClass.PALADIN
 import com.valsagnapps.dndapp.domain.CharacterClass.RANGER
 import com.valsagnapps.dndapp.domain.CharacterClass.ROGUE
 import com.valsagnapps.dndapp.domain.CharacterClass.SORCERER
+import com.valsagnapps.dndapp.domain.CharacterClass.WARLOCK
 import com.valsagnapps.dndapp.domain.CharacterClass.WIZARD
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.EnumSource
@@ -60,7 +61,13 @@ class ClassFeatureTest {
         assertEquals(12, RANGER.features.size)
         assertEquals(6, Subclass.LIFE.features.size)
         assertEquals(6, Subclass.NATURE.features.size)
+        assertEquals(5, Subclass.KNOWLEDGE.features.size)
+        assertEquals(6, Subclass.LIGHT.features.size)
+        assertEquals(6, Subclass.TEMPEST.features.size)
+        assertEquals(5, Subclass.TRICKERY.features.size)
+        assertEquals(6, Subclass.WAR.features.size)
         assertEquals(4, Subclass.HUNTER.features.size)
+        assertEquals(4, Subclass.BEAST_MASTER.features.size)
     }
 
     @Test
@@ -124,9 +131,25 @@ class ClassFeatureTest {
     }
 
     @Test
-    fun `classes without features loaded yet have none`() {
-        assertEquals(emptyList(), ROGUE.features)
-        assertEquals(emptyList(), Subclass.THIEF.features)
+    fun `rogue and its archetypes have their features loaded`() {
+        assertEquals(12, ROGUE.features.size)
+        assertEquals(5, Subclass.THIEF.features.size)
+        assertEquals(5, Subclass.ASSASSIN.features.size)
+        assertEquals(5, Subclass.ARCANE_TRICKSTER.features.size)
+    }
+
+    @Test
+    fun `warlock and its patrons have their features loaded`() {
+        assertEquals(6, WARLOCK.features.size)
+        assertEquals(4, Subclass.ARCHFEY.features.size)
+        assertEquals(4, Subclass.FIEND.features.size)
+        assertEquals(4, Subclass.GREAT_OLD_ONE.features.size)
+    }
+
+    @Test
+    fun `every class and subclass has its features loaded`() {
+        assertTrue(CharacterClass.entries.all { it.features.isNotEmpty() })
+        assertTrue(Subclass.entries.all { it.features.isNotEmpty() })
     }
 
     @Test
@@ -173,7 +196,11 @@ class ClassFeatureTest {
     fun `features mark whether they come with the SRD text`() {
         assertTrue(allFeatures.all { it.source == Source.PHB })
         assertTrue(CLERIC.features.all { it.srdText != null })
-        assertTrue(Subclass.NATURE.features.all { it.srdText == null })
+        assertTrue(
+            Subclass.entries
+                .filter { it.characterClass == CLERIC && it != Subclass.LIFE }
+                .all { domain -> domain.features.all { it.srdText == null } },
+        )
         assertTrue((PALADIN.features + Subclass.DEVOTION.features).all { it.srdText != null })
         assertTrue((Subclass.ANCIENTS.features + Subclass.VENGEANCE.features).all { it.srdText == null })
         assertTrue((WIZARD.features + Subclass.EVOCATION.features).all { it.srdText != null })
@@ -189,6 +216,12 @@ class ClassFeatureTest {
         assertTrue(Subclass.VALOR.features.all { it.srdText == null })
         assertTrue((BARBARIAN.features + Subclass.BERSERKER.features).all { it.srdText != null })
         assertTrue(Subclass.TOTEM_WARRIOR.features.all { it.srdText == null })
+        assertTrue((RANGER.features + Subclass.HUNTER.features).all { it.srdText != null })
+        assertTrue(Subclass.BEAST_MASTER.features.all { it.srdText == null })
+        assertTrue((ROGUE.features + Subclass.THIEF.features).all { it.srdText != null })
+        assertTrue((Subclass.ASSASSIN.features + Subclass.ARCANE_TRICKSTER.features).all { it.srdText == null })
+        assertTrue((WARLOCK.features + Subclass.FIEND.features).all { it.srdText != null })
+        assertTrue((Subclass.ARCHFEY.features + Subclass.GREAT_OLD_ONE.features).all { it.srdText == null })
         assertTrue(
             Subclass.entries
                 .filter { it.characterClass == WIZARD && it != Subclass.EVOCATION }
