@@ -1,6 +1,5 @@
 package com.valsagnapps.dndapp.adapter.outbound.persistence
 
-import com.valsagnapps.dndapp.domain.LifeStatus
 import com.valsagnapps.dndapp.domain.Proficiency
 import com.valsagnapps.dndapp.domain.Skill
 import jakarta.persistence.CollectionTable
@@ -32,8 +31,6 @@ class CharacterEntity(
     val maxHitPoints: Int,
     val currentHitPoints: Int,
     val temporaryHitPoints: Int,
-    @Enumerated(EnumType.STRING)
-    val lifeStatus: LifeStatus,
     val deathSaveSuccesses: Int,
     val deathSaveFailures: Int,
     val armorClassOverride: Int?,

@@ -1,17 +1,17 @@
 package com.valsagnapps.dndapp.application.service
 
 import com.valsagnapps.dndapp.application.port.inbound.HealUseCase
-import com.valsagnapps.dndapp.application.port.inbound.RecordDeathSaveUseCase
 import com.valsagnapps.dndapp.application.port.inbound.ReviveUseCase
 import com.valsagnapps.dndapp.application.port.inbound.SetTemporaryHitPointsUseCase
 import com.valsagnapps.dndapp.application.port.inbound.TakeDamageUseCase
 import com.valsagnapps.dndapp.application.port.inbound.UpdateArmorClassUseCase
+import com.valsagnapps.dndapp.application.port.inbound.UpdateDeathSavesUseCase
 import com.valsagnapps.dndapp.application.port.inbound.UpdateSpeedUseCase
 import com.valsagnapps.dndapp.application.port.outbound.CharacterRepository
 import com.valsagnapps.dndapp.domain.Character
 import com.valsagnapps.dndapp.domain.CharacterId
 import com.valsagnapps.dndapp.domain.CharacterNotFoundException
-import com.valsagnapps.dndapp.domain.DeathSaveResult
+import com.valsagnapps.dndapp.domain.DeathSaves
 import com.valsagnapps.dndapp.domain.HitPoints
 
 // Estado de combate del personaje. Las reglas (temporales primero, death saves, muerte) viven en HitPoints.
@@ -19,7 +19,7 @@ class CombatService(private val characterRepository: CharacterRepository) :
     TakeDamageUseCase,
     HealUseCase,
     SetTemporaryHitPointsUseCase,
-    RecordDeathSaveUseCase,
+    UpdateDeathSavesUseCase,
     ReviveUseCase,
     UpdateArmorClassUseCase,
     UpdateSpeedUseCase {
@@ -31,8 +31,8 @@ class CombatService(private val characterRepository: CharacterRepository) :
     override fun setTemporaryHitPoints(id: CharacterId, temporaryHitPoints: Int): Character =
         updateHitPoints(id) { it.withTemporary(temporaryHitPoints) }
 
-    override fun recordDeathSave(id: CharacterId, result: DeathSaveResult): Character =
-        updateHitPoints(id) { it.recordDeathSave(result) }
+    override fun updateDeathSaves(id: CharacterId, deathSaves: DeathSaves): Character =
+        updateHitPoints(id) { it.withDeathSaves(deathSaves) }
 
     override fun revive(id: CharacterId, hitPoints: Int): Character = updateHitPoints(id) { it.revive(hitPoints) }
 

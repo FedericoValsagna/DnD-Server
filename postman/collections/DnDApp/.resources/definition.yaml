@@ -2,7 +2,7 @@ $kind: collection
 description: |-
   Endpoints del server de DnDApp. Elegir el environment (dev, run o prod) antes de mandar requests.
   "Create character" guarda el id en la variable characterId, que usan los demás requests.
-  Los requests de combate (66 a 74) van en orden: temporales, daño hasta quedar muriendo, death save, revivir
+  Los requests de combate (66 a 74) van en orden: temporales, daño hasta quedar muriendo, death saves, revivir
   (antes le pega otra vez para matarlo) y curar. Sueltos, pueden dar 409.
   "Delete character" va último porque borra ese personaje.
   characterClass es la clase a la que "Update subclass" le elige subclase (FIGHTER, que deja "Update classes").

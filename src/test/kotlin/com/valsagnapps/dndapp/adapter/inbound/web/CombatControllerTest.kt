@@ -3,10 +3,12 @@ package com.valsagnapps.dndapp.adapter.inbound.web
 import com.valsagnapps.dndapp.application.service.CombatService
 import com.valsagnapps.dndapp.application.service.InMemoryCharacterRepository
 import com.valsagnapps.dndapp.domain.Character
+import com.valsagnapps.dndapp.domain.DeathSaves
 import com.valsagnapps.dndapp.domain.HitPoints
-import com.valsagnapps.dndapp.domain.LifeStatus
 import com.valsagnapps.dndapp.domain.abilityScores
 import com.valsagnapps.dndapp.domain.character
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest
@@ -41,9 +43,11 @@ class CombatControllerTest {
 
     private fun saved(character: Character = character(maxHitPoints = 20)) = repository.save(character)
 
-    private fun dying() = saved(character(hitPoints = HitPoints(max = 20, current = 0, status = LifeStatus.DYING)))
+    private fun dying() = saved(character(hitPoints = HitPoints(max = 20, current = 0)))
 
-    private fun dead() = saved(character(hitPoints = HitPoints(max = 20, current = 0, status = LifeStatus.DEAD)))
+    private fun dead() = saved(
+        character(hitPoints = HitPoints(max = 20, current = 0, deathSaves = DeathSaves(failures = 3))),
+    )
 
     private fun send(method: String, character: Character, path: String, body: String?): ResultActionsDsl {
         val url = "/api/v1/characters/${character.id.value}/$path"
@@ -116,21 +120,40 @@ class CombatControllerTest {
     }
 
     @Test
-    fun `records a death save`() {
-        send("POST", dying(), "death-saves", """{ "result": "CRITICAL_FAILURE" }""").andExpect {
+    fun `updates the death saves`() {
+        send("PUT", dying(), "death-saves", """{ "successes": 1, "failures": 3 }""").andExpect {
             status { isOk() }
-            jsonPath("$.deathSaves.failures") { value(2) }
+            jsonPath("$.deathSaves.successes") { value(1) }
+            jsonPath("$.deathSaves.failures") { value(3) }
+            jsonPath("$.lifeStatus") { value("DEAD") }
         }
     }
 
     @Test
-    fun `a death save while conscious is a conflict`() {
-        send("POST", saved(), "death-saves", """{ "result": "SUCCESS" }""").andExpect { status { isConflict() } }
+    fun `unmarking a failure brings a dead character back to dying`() {
+        send("PUT", dead(), "death-saves", """{ "successes": 0, "failures": 2 }""").andExpect {
+            status { isOk() }
+            jsonPath("$.lifeStatus") { value("DYING") }
+        }
     }
 
     @Test
-    fun `rejects an unknown death save result`() {
-        send("POST", dying(), "death-saves", """{ "result": "MAYBE" }""").andExpect { status { isBadRequest() } }
+    fun `death saves while conscious are a conflict`() {
+        send("PUT", saved(), "death-saves", """{ "successes": 1, "failures": 0 }""").andExpect {
+            status { isConflict() }
+        }
+    }
+
+    @ParameterizedTest
+    @ValueSource(
+        strings = [
+            """{ "successes": 4, "failures": 0 }""",
+            """{ "successes": 0, "failures": -1 }""",
+            """{ "successes": 3, "failures": 3 }""",
+        ],
+    )
+    fun `rejects invalid death saves`(body: String) {
+        send("PUT", dying(), "death-saves", body).andExpect { status { isBadRequest() } }
     }
 
     @Test

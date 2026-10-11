@@ -6,7 +6,6 @@ import com.valsagnapps.dndapp.domain.CharacterId
 import com.valsagnapps.dndapp.domain.ClassLevel
 import com.valsagnapps.dndapp.domain.DeathSaves
 import com.valsagnapps.dndapp.domain.HitPoints
-import com.valsagnapps.dndapp.domain.LifeStatus
 import com.valsagnapps.dndapp.domain.Proficiency
 import com.valsagnapps.dndapp.domain.Skill
 import com.valsagnapps.dndapp.domain.SkillProficiencies
@@ -63,7 +62,6 @@ class CharacterPersistenceAdapterTest {
                 max = 30,
                 current = 0,
                 temporary = 4,
-                status = LifeStatus.DYING,
                 deathSaves = DeathSaves(successes = 2, failures = 1),
             ),
             armorClassOverride = 18,

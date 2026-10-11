@@ -1,13 +1,14 @@
 package com.valsagnapps.dndapp.adapter.inbound.web
 
 import com.valsagnapps.dndapp.application.port.inbound.HealUseCase
-import com.valsagnapps.dndapp.application.port.inbound.RecordDeathSaveUseCase
 import com.valsagnapps.dndapp.application.port.inbound.ReviveUseCase
 import com.valsagnapps.dndapp.application.port.inbound.SetTemporaryHitPointsUseCase
 import com.valsagnapps.dndapp.application.port.inbound.TakeDamageUseCase
 import com.valsagnapps.dndapp.application.port.inbound.UpdateArmorClassUseCase
+import com.valsagnapps.dndapp.application.port.inbound.UpdateDeathSavesUseCase
 import com.valsagnapps.dndapp.application.port.inbound.UpdateSpeedUseCase
 import com.valsagnapps.dndapp.domain.CharacterId
+import com.valsagnapps.dndapp.domain.DeathSaves
 import jakarta.validation.Valid
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -25,7 +26,7 @@ class CombatController(
     private val takeDamage: TakeDamageUseCase,
     private val heal: HealUseCase,
     private val setTemporaryHitPoints: SetTemporaryHitPointsUseCase,
-    private val recordDeathSave: RecordDeathSaveUseCase,
+    private val updateDeathSaves: UpdateDeathSavesUseCase,
     private val revive: ReviveUseCase,
     private val updateArmorClass: UpdateArmorClassUseCase,
     private val updateSpeed: UpdateSpeedUseCase,
@@ -46,9 +47,14 @@ class CombatController(
         setTemporaryHitPoints.setTemporaryHitPoints(CharacterId(id), request.temporaryHitPoints),
     )
 
-    @PostMapping("/death-saves")
-    fun recordDeathSave(@PathVariable id: UUID, @RequestBody request: DeathSaveRequest): CharacterResponse =
-        CharacterResponse.from(recordDeathSave.recordDeathSave(CharacterId(id), request.result))
+    // Los contadores completos, como quedaron después de marcar o desmarcar un punto.
+    @PutMapping("/death-saves")
+    fun updateDeathSaves(
+        @PathVariable id: UUID,
+        @Valid @RequestBody request: UpdateDeathSavesRequest,
+    ): CharacterResponse = CharacterResponse.from(
+        updateDeathSaves.updateDeathSaves(CharacterId(id), DeathSaves(request.successes, request.failures)),
+    )
 
     // El cuerpo es opcional: sin él vuelve con 1 HP.
     @PostMapping("/revive")

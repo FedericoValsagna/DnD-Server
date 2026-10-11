@@ -14,7 +14,7 @@ scripts:
   - type: beforeRequest
     language: text/javascript
     code: |-
-      // Solo se revive a un muerto: un golpe más (tercer fallo, después de "Record death save") lo mata.
+      // Solo se revive a un muerto: un golpe más (tercer fallo, después de "Update death saves") lo mata.
       pm.sendRequest({
         url: pm.variables.replaceIn("{{baseUrl}}/api/v1/characters/{{characterId}}/damage"),
         method: "POST",

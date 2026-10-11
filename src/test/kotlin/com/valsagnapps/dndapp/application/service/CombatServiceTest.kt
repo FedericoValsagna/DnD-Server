@@ -3,7 +3,6 @@ package com.valsagnapps.dndapp.application.service
 import com.valsagnapps.dndapp.domain.CharacterId
 import com.valsagnapps.dndapp.domain.CharacterNotFoundException
 import com.valsagnapps.dndapp.domain.CombatActionNotAllowedException
-import com.valsagnapps.dndapp.domain.DeathSaveResult
 import com.valsagnapps.dndapp.domain.DeathSaves
 import com.valsagnapps.dndapp.domain.HitPoints
 import com.valsagnapps.dndapp.domain.LifeStatus
@@ -29,7 +28,7 @@ class CombatServiceTest {
 
     @Test
     fun `a critical hit while dying counts two failures`() {
-        val dying = HitPoints(max = 20, current = 0, status = LifeStatus.DYING)
+        val dying = HitPoints(max = 20, current = 0)
         val character = repository.save(character(maxHitPoints = 20, hitPoints = dying))
 
         assertEquals(
@@ -58,18 +57,18 @@ class CombatServiceTest {
 
     @Test
     fun `death saves are saved`() {
-        val dying = HitPoints(max = 20, current = 0, status = LifeStatus.DYING)
+        val dying = HitPoints(max = 20, current = 0)
         val character = repository.save(character(maxHitPoints = 20, hitPoints = dying))
 
-        val saved = service.recordDeathSave(character.id, DeathSaveResult.SUCCESS)
+        val saved = service.updateDeathSaves(character.id, DeathSaves(successes = 1, failures = 2))
 
-        assertEquals(DeathSaves(successes = 1), saved.hitPoints.deathSaves)
+        assertEquals(DeathSaves(successes = 1, failures = 2), saved.hitPoints.deathSaves)
         assertEquals(saved, repository.findById(character.id))
     }
 
     @Test
     fun `reviving is saved`() {
-        val dead = HitPoints(max = 20, current = 0, status = LifeStatus.DEAD)
+        val dead = HitPoints(max = 20, current = 0, deathSaves = DeathSaves(failures = 3))
         val character = repository.save(character(maxHitPoints = 20, hitPoints = dead))
 
         val revived = service.revive(character.id, 1)
@@ -80,7 +79,7 @@ class CombatServiceTest {
 
     @Test
     fun `a rejected action leaves the character as it was`() {
-        val dead = HitPoints(max = 20, current = 0, status = LifeStatus.DEAD)
+        val dead = HitPoints(max = 20, current = 0, deathSaves = DeathSaves(failures = 3))
         val character = repository.save(character(maxHitPoints = 20, hitPoints = dead))
 
         assertFailsWith<CombatActionNotAllowedException> { service.heal(character.id, 5) }

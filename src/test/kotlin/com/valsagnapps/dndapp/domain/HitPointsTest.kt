@@ -1,7 +1,6 @@
 package com.valsagnapps.dndapp.domain
 
 import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.EnumSource
 import org.junit.jupiter.params.provider.ValueSource
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -9,8 +8,9 @@ import kotlin.test.assertFailsWith
 import kotlin.test.assertSame
 
 class HitPointsTest {
-    private val dying = HitPoints(max = 20, current = 0, status = LifeStatus.DYING)
-    private val dead = HitPoints(max = 20, current = 0, status = LifeStatus.DEAD)
+    private val dying = HitPoints(max = 20, current = 0)
+    private val stable = HitPoints(max = 20, current = 0, deathSaves = DeathSaves(successes = 3))
+    private val dead = HitPoints(max = 20, current = 0, deathSaves = DeathSaves(failures = 3))
 
     @Test
     fun `starts at full hit points, conscious and without death saves`() {
@@ -34,8 +34,11 @@ class HitPointsTest {
     }
 
     @Test
-    fun `rejects a conscious character at 0 hit points`() {
-        assertFailsWith<IllegalArgumentException> { HitPoints(max = 20, current = 0) }
+    fun `at 0 hit points the death saves tell the status`() {
+        assertEquals(LifeStatus.DYING, dying.status)
+        assertEquals(LifeStatus.DYING, dying.copy(deathSaves = DeathSaves(successes = 2, failures = 2)).status)
+        assertEquals(LifeStatus.STABLE, stable.status)
+        assertEquals(LifeStatus.DEAD, dead.status)
     }
 
     @Test
@@ -79,6 +82,7 @@ class HitPointsTest {
 
         assertEquals(LifeStatus.DEAD, hitPoints.status)
         assertEquals(0, hitPoints.current)
+        assertEquals(DeathSaves(failures = 3), hitPoints.deathSaves)
     }
 
     @Test
@@ -110,17 +114,23 @@ class HitPointsTest {
     }
 
     @Test
-    fun `third failed death save from damage kills`() {
-        val hitPoints = dying.copy(deathSaves = DeathSaves(failures = 2)).takeDamage(1)
+    fun `third failed death save from damage kills, keeping the successes`() {
+        val hitPoints = dying.copy(deathSaves = DeathSaves(successes = 1, failures = 2)).takeDamage(1)
 
         assertEquals(LifeStatus.DEAD, hitPoints.status)
-        assertEquals(DeathSaves(failures = 3), hitPoints.deathSaves)
+        assertEquals(DeathSaves(successes = 1, failures = 3), hitPoints.deathSaves)
     }
 
     @Test
-    fun `damage on a stable character starts dying again`() {
-        val stable = HitPoints(max = 20, current = 0, status = LifeStatus.STABLE)
+    fun `a critical hit with two failures kills without going over three`() {
+        assertEquals(
+            DeathSaves(failures = 3),
+            dying.copy(deathSaves = DeathSaves(failures = 2)).takeDamage(1, critical = true).deathSaves,
+        )
+    }
 
+    @Test
+    fun `damage on a stable character starts dying again from scratch`() {
         val hitPoints = stable.takeDamage(1)
 
         assertEquals(LifeStatus.DYING, hitPoints.status)
@@ -180,61 +190,66 @@ class HitPointsTest {
     }
 
     @Test
-    fun `a successful death save counts a success`() {
-        assertEquals(DeathSaves(successes = 1), dying.recordDeathSave(DeathSaveResult.SUCCESS).deathSaves)
+    fun `marks death saves at 0 hit points`() {
+        val hitPoints = dying.withDeathSaves(DeathSaves(successes = 1, failures = 2))
+
+        assertEquals(DeathSaves(successes = 1, failures = 2), hitPoints.deathSaves)
+        assertEquals(LifeStatus.DYING, hitPoints.status)
     }
 
     @Test
-    fun `third successful death save stabilizes and resets the counters`() {
-        val hitPoints = dying.copy(deathSaves = DeathSaves(successes = 2, failures = 1))
-            .recordDeathSave(DeathSaveResult.SUCCESS)
-
-        assertEquals(LifeStatus.STABLE, hitPoints.status)
-        assertEquals(DeathSaves.NONE, hitPoints.deathSaves)
+    fun `third success stabilizes`() {
+        assertEquals(LifeStatus.STABLE, dying.withDeathSaves(DeathSaves(successes = 3, failures = 1)).status)
     }
 
     @Test
-    fun `a failed death save counts a failure`() {
-        assertEquals(DeathSaves(failures = 1), dying.recordDeathSave(DeathSaveResult.FAILURE).deathSaves)
+    fun `third failure kills`() {
+        assertEquals(LifeStatus.DEAD, dying.withDeathSaves(DeathSaves(successes = 2, failures = 3)).status)
     }
 
     @Test
-    fun `a natural 1 counts two failures`() {
-        assertEquals(DeathSaves(failures = 2), dying.recordDeathSave(DeathSaveResult.CRITICAL_FAILURE).deathSaves)
+    fun `unmarking a success undoes the stabilization`() {
+        assertEquals(LifeStatus.DYING, stable.withDeathSaves(DeathSaves(successes = 2)).status)
     }
 
     @Test
-    fun `a natural 1 with two failures already kills without going over three`() {
-        val hitPoints = dying.copy(deathSaves = DeathSaves(failures = 2))
-            .recordDeathSave(DeathSaveResult.CRITICAL_FAILURE)
-
-        assertEquals(LifeStatus.DEAD, hitPoints.status)
-        assertEquals(DeathSaves(failures = 3), hitPoints.deathSaves)
+    fun `unmarking a failure undoes the death`() {
+        assertEquals(LifeStatus.DYING, dead.withDeathSaves(DeathSaves(failures = 2)).status)
     }
 
     @Test
-    fun `a natural 20 wakes up with 1 hit point`() {
-        val hitPoints = dying.copy(deathSaves = DeathSaves(failures = 2))
-            .recordDeathSave(DeathSaveResult.CRITICAL_SUCCESS)
+    fun `only a character at 0 hit points makes death saves`() {
+        assertFailsWith<CombatActionNotAllowedException> {
+            HitPoints(max = 20).withDeathSaves(DeathSaves(successes = 1))
+        }
+    }
 
-        assertEquals(1, hitPoints.current)
+    @Test
+    fun `rejects three successes and three failures at once`() {
+        assertFailsWith<IllegalArgumentException> { DeathSaves(successes = 3, failures = 3) }
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = [-1, 4])
+    fun `rejects death saves out of range`(count: Int) {
+        assertFailsWith<IllegalArgumentException> { DeathSaves(successes = count) }
+        assertFailsWith<IllegalArgumentException> { DeathSaves(failures = count) }
+    }
+
+    @Test
+    fun `healing a stable character wakes it up`() {
+        val hitPoints = stable.heal(1)
+
         assertEquals(LifeStatus.CONSCIOUS, hitPoints.status)
         assertEquals(DeathSaves.NONE, hitPoints.deathSaves)
     }
 
-    @ParameterizedTest
-    @EnumSource(LifeStatus::class, names = ["CONSCIOUS", "STABLE", "DEAD"])
-    fun `only a dying character makes death saves`(status: LifeStatus) {
-        val hitPoints = HitPoints(max = 20, current = if (status == LifeStatus.CONSCIOUS) 20 else 0, status = status)
-
-        assertFailsWith<CombatActionNotAllowedException> { hitPoints.recordDeathSave(DeathSaveResult.SUCCESS) }
-    }
-
     @Test
     fun `reviving leaves 1 hit point by default and clears death saves`() {
-        val hitPoints = dead.copy(deathSaves = DeathSaves(failures = 3)).revive()
+        val hitPoints = dead.copy(temporary = 4).revive()
 
         assertEquals(1, hitPoints.current)
+        assertEquals(0, hitPoints.temporary)
         assertEquals(LifeStatus.CONSCIOUS, hitPoints.status)
         assertEquals(DeathSaves.NONE, hitPoints.deathSaves)
     }

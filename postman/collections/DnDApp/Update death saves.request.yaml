@@ -1,14 +1,15 @@
 $kind: http-request
-name: Record death save
+name: Update death saves
 url: "{{baseUrl}}/api/v1/characters/{{characterId}}/death-saves"
-method: POST
+method: PUT
 headers:
   Content-Type: application/json
 body:
   type: json
   content: |-
     {
-      "result": "CRITICAL_FAILURE"
+      "successes": 1,
+      "failures": 2
     }
 scripts:
   - type: afterResponse
@@ -16,8 +17,9 @@ scripts:
     code: |-
       const body = pm.response.json();
 
-      pm.test("a natural 1 counts two failures", function () {
+      pm.test("the death saves are updated and the character keeps dying", function () {
         pm.response.to.have.status(200);
+        pm.expect(body.deathSaves.successes).to.equal(1);
         pm.expect(body.deathSaves.failures).to.equal(2);
         pm.expect(body.lifeStatus).to.equal("DYING");
       });
