@@ -10,6 +10,7 @@ import com.valsagnapps.dndapp.domain.CharacterClass.PALADIN
 import com.valsagnapps.dndapp.domain.CharacterClass.RANGER
 import com.valsagnapps.dndapp.domain.CharacterClass.ROGUE
 import com.valsagnapps.dndapp.domain.CharacterClass.SORCERER
+import com.valsagnapps.dndapp.domain.CharacterClass.WARLOCK
 import com.valsagnapps.dndapp.domain.CharacterClass.WIZARD
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.EnumSource
@@ -124,9 +125,17 @@ class ClassFeatureTest {
     }
 
     @Test
+    fun `rogue and its archetypes have their features loaded`() {
+        assertEquals(12, ROGUE.features.size)
+        assertEquals(5, Subclass.THIEF.features.size)
+        assertEquals(5, Subclass.ASSASSIN.features.size)
+        assertEquals(5, Subclass.ARCANE_TRICKSTER.features.size)
+    }
+
+    @Test
     fun `classes without features loaded yet have none`() {
-        assertEquals(emptyList(), ROGUE.features)
-        assertEquals(emptyList(), Subclass.THIEF.features)
+        assertEquals(emptyList(), WARLOCK.features)
+        assertEquals(emptyList(), Subclass.FIEND.features)
     }
 
     @Test
@@ -189,6 +198,8 @@ class ClassFeatureTest {
         assertTrue(Subclass.VALOR.features.all { it.srdText == null })
         assertTrue((BARBARIAN.features + Subclass.BERSERKER.features).all { it.srdText != null })
         assertTrue(Subclass.TOTEM_WARRIOR.features.all { it.srdText == null })
+        assertTrue((ROGUE.features + Subclass.THIEF.features).all { it.srdText != null })
+        assertTrue((Subclass.ASSASSIN.features + Subclass.ARCANE_TRICKSTER.features).all { it.srdText == null })
         assertTrue(
             Subclass.entries
                 .filter { it.characterClass == WIZARD && it != Subclass.EVOCATION }
