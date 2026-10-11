@@ -18,6 +18,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.delete
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
 import org.springframework.test.web.servlet.put
@@ -464,6 +465,112 @@ class CharacterControllerTest {
             status { isNotFound() }
         }
     }
+
+    @Test
+    fun `renames a character`() {
+        val character = characterService.create(createCommand("Krusk"))
+
+        mockMvc.put("/api/v1/characters/{id}/name", character.id.value) {
+            contentType = MediaType.APPLICATION_JSON
+            content = """{ "name": "Krusk the Bold" }"""
+        }.andExpect {
+            status { isOk() }
+            jsonPath("$.name") { value("Krusk the Bold") }
+            jsonPath("$.id") { value(character.id.value.toString()) }
+        }
+    }
+
+    @Test
+    fun `rejects invalid names`() {
+        val character = characterService.create(createCommand("Krusk"))
+        val invalid =
+            listOf("""{ "name": "" }""", """{ "name": "   " }""", """{ "name": "${"a".repeat(101)}" }""", "{}")
+
+        invalid.forEach { body ->
+            mockMvc.put("/api/v1/characters/{id}/name", character.id.value) {
+                contentType = MediaType.APPLICATION_JSON
+                content = body
+            }.andExpect {
+                status { isBadRequest() }
+            }
+        }
+    }
+
+    @Test
+    fun `returns 404 when renaming a character that does not exist`() {
+        mockMvc.put("/api/v1/characters/{id}/name", UUID.randomUUID()) {
+            contentType = MediaType.APPLICATION_JSON
+            content = """{ "name": "Krusk" }"""
+        }.andExpect {
+            status { isNotFound() }
+        }
+    }
+
+    @Test
+    fun `replaces the ability scores of a character`() {
+        val character = characterService.create(createCommand("Mialee", level = 5))
+
+        mockMvc.put("/api/v1/characters/{id}/ability-scores", character.id.value) {
+            contentType = MediaType.APPLICATION_JSON
+            content = abilityScoresRequest(strength = 18)
+        }.andExpect {
+            status { isOk() }
+            jsonPath("$.abilities.STRENGTH.score") { value(18) }
+            jsonPath("$.abilities.STRENGTH.modifier") { value(4) }
+            jsonPath("$.savingThrows.STRENGTH.bonus") { value(7) }
+            jsonPath("$.skills.ATHLETICS.bonus") { value(4) }
+        }
+    }
+
+    @Test
+    fun `rejects invalid ability scores`() {
+        val character = characterService.create(createCommand("Mialee"))
+        val invalid = listOf(abilityScoresRequest(strength = 0), abilityScoresRequest(strength = 31), "{}")
+
+        invalid.forEach { body ->
+            mockMvc.put("/api/v1/characters/{id}/ability-scores", character.id.value) {
+                contentType = MediaType.APPLICATION_JSON
+                content = body
+            }.andExpect {
+                status { isBadRequest() }
+            }
+        }
+    }
+
+    @Test
+    fun `returns 404 when updating ability scores of a character that does not exist`() {
+        mockMvc.put("/api/v1/characters/{id}/ability-scores", UUID.randomUUID()) {
+            contentType = MediaType.APPLICATION_JSON
+            content = abilityScoresRequest(strength = 10)
+        }.andExpect {
+            status { isNotFound() }
+        }
+    }
+
+    @Test
+    fun `deletes a character`() {
+        val character = characterService.create(createCommand("Mialee"))
+
+        mockMvc.delete("/api/v1/characters/{id}", character.id.value).andExpect {
+            status { isNoContent() }
+            content { string("") }
+        }
+        mockMvc.get("/api/v1/characters/{id}", character.id.value).andExpect {
+            status { isNotFound() }
+        }
+    }
+
+    @Test
+    fun `returns 404 when deleting a character that does not exist`() {
+        mockMvc.delete("/api/v1/characters/{id}", UUID.randomUUID()).andExpect {
+            status { isNotFound() }
+        }
+    }
+
+    private fun abilityScoresRequest(strength: Int) = """
+        { "abilityScores": { "strength": $strength, "dexterity": 10, "constitution": 10,
+                             "intelligence": 10, "wisdom": 10, "charisma": 10 } }
+    """.trimIndent()
 
     private fun validRequest(
         name: String,

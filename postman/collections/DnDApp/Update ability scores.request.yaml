@@ -1,0 +1,31 @@
+$kind: http-request
+name: Update ability scores
+url: "{{baseUrl}}/api/v1/characters/{{characterId}}/ability-scores"
+method: PUT
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "abilityScores": {
+        "strength": 18,
+        "dexterity": 12,
+        "constitution": 16,
+        "intelligence": 10,
+        "wisdom": 13,
+        "charisma": 8
+      }
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      const body = pm.response.json();
+
+      pm.test("ability scores updated", function () {
+        pm.response.to.have.status(200);
+        pm.expect(body.abilities.STRENGTH.score).to.equal(18);
+        pm.expect(body.abilities.STRENGTH.modifier).to.equal(4);
+      });
+order: 64

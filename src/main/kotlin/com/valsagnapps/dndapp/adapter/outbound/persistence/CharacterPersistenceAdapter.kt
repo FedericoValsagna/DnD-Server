@@ -15,6 +15,9 @@ class CharacterPersistenceAdapter(private val jpaRepository: CharacterJpaReposit
     override fun findById(id: CharacterId): Character? = jpaRepository.findById(id.value).orElse(null)?.toDomain()
 
     override fun findAll(): List<Character> = jpaRepository.findAll().map { it.toDomain() }
+
+    // Las skills y clases (element collections) se borran con el personaje.
+    override fun delete(id: CharacterId) = jpaRepository.deleteById(id.value)
 }
 
 private fun Character.toEntity() = CharacterEntity(

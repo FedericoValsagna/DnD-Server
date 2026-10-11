@@ -67,6 +67,11 @@ data class UpdateSubclassRequest(val subclass: Subclass? = null)
 
 data class UpdateHitPointsRequest(@field:Min(MIN_HIT_POINTS) @field:Max(MAX_HIT_POINTS) val maxHitPoints: Int)
 
+data class UpdateNameRequest(@field:NotBlank @field:Size(max = Character.MAX_NAME_LENGTH) val name: String)
+
+// Reemplaza los seis atributos, con el mismo formato que la creación.
+data class UpdateAbilityScoresRequest(@field:Valid val abilityScores: AbilityScoresDto)
+
 data class ClassLevelDto(
     @param:JsonProperty("class") @get:JsonProperty("class") val characterClass: CharacterClass,
     @field:Min(MIN_LEVEL) @field:Max(MAX_LEVEL) val level: Int,

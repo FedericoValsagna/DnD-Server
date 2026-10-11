@@ -1,0 +1,12 @@
+$kind: http-request
+name: Delete character
+url: "{{baseUrl}}/api/v1/characters/{{characterId}}"
+method: DELETE
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("character deleted", function () {
+        pm.response.to.have.status(204);
+      });
+order: 90
