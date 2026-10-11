@@ -72,7 +72,7 @@ Reglas:
 - Texto SRD: se toma de una fuente del SRD 5.1 (la API `dnd5eapi.co/api/2014`), nunca de memoria. Las opciones a elegir (Fighting Style, Hunter's Prey, ...) van dentro del texto de la feature que las agrupa.
 - El catálogo se expone en `GET /api/v1/classes` (clases con nivel de subclase y subclases, con nombre y `Source`) para que la app no duplique reglas.
 - El HP máximo se carga a mano (promedio o dados, lo decide el jugador): se persiste, no se calcula.
-- Plan de clases por slices (un PR por slice): 1) clase base, HP y salvaciones (hecho) · 2) competencias de clase (hecho) · 3) subclases (hecho) · 4) features por nivel (en curso: Cleric con Life y Nature, Ranger con Hunter) · 5) spellcasting · 6) multiclase en la UI · 7) recursos con usos y descansos (las features tienen id estable para colgarlos).
+- El plan de clases por slices y su estado están en `../docs/features/clases.md`.
 
 ## Testing
 
@@ -92,6 +92,7 @@ Objetivo: buen coverage, con la pirámide bien armada.
 
 ## Contrato con la app
 
+- El contrato que consume la app está en `../docs/api.md` (en la raíz de CharacterSheet). Todo PR que cambie la API lo actualiza.
 - Endpoints versionados bajo `/api/v1/...`.
 - Todo endpoint nuevo bajo `/api` lleva su request en la colección de Postman (`postman/collections/DnDApp/<Nombre>.request.yaml`, con `url: "{{baseUrl}}/api/..."`, un script con `pm.test` y `order` para ubicarlo). `PostmanCollectionTest` falla si la colección y los endpoints no coinciden. Environments en `postman/environments` (dev 8081, run 8082, prod 8080).
 - Cambios que rompan el contrato (renombrar/quitar campos, cambiar tipos) requieren nueva versión o coordinación explícita con la app Android.
