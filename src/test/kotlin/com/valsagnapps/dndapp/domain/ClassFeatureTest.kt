@@ -8,6 +8,7 @@ import com.valsagnapps.dndapp.domain.CharacterClass.FIGHTER
 import com.valsagnapps.dndapp.domain.CharacterClass.MONK
 import com.valsagnapps.dndapp.domain.CharacterClass.PALADIN
 import com.valsagnapps.dndapp.domain.CharacterClass.RANGER
+import com.valsagnapps.dndapp.domain.CharacterClass.ROGUE
 import com.valsagnapps.dndapp.domain.CharacterClass.SORCERER
 import com.valsagnapps.dndapp.domain.CharacterClass.WIZARD
 import org.junit.jupiter.params.ParameterizedTest
@@ -115,9 +116,17 @@ class ClassFeatureTest {
     }
 
     @Test
+    fun `fighter and its archetypes have their features loaded`() {
+        assertEquals(6, FIGHTER.features.size)
+        assertEquals(5, Subclass.CHAMPION.features.size)
+        assertEquals(5, Subclass.BATTLE_MASTER.features.size)
+        assertEquals(6, Subclass.ELDRITCH_KNIGHT.features.size)
+    }
+
+    @Test
     fun `classes without features loaded yet have none`() {
-        assertEquals(emptyList(), FIGHTER.features)
-        assertEquals(emptyList(), Subclass.CHAMPION.features)
+        assertEquals(emptyList(), ROGUE.features)
+        assertEquals(emptyList(), Subclass.THIEF.features)
     }
 
     @Test
@@ -174,6 +183,8 @@ class ClassFeatureTest {
         assertTrue(Subclass.MOON.features.all { it.srdText == null })
         assertTrue((MONK.features + Subclass.OPEN_HAND.features).all { it.srdText != null })
         assertTrue((Subclass.SHADOW.features + Subclass.FOUR_ELEMENTS.features).all { it.srdText == null })
+        assertTrue((FIGHTER.features + Subclass.CHAMPION.features).all { it.srdText != null })
+        assertTrue((Subclass.BATTLE_MASTER.features + Subclass.ELDRITCH_KNIGHT.features).all { it.srdText == null })
         assertTrue((BARD.features + Subclass.LORE.features).all { it.srdText != null })
         assertTrue(Subclass.VALOR.features.all { it.srdText == null })
         assertTrue((BARBARIAN.features + Subclass.BERSERKER.features).all { it.srdText != null })
