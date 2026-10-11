@@ -15,4 +15,8 @@ class InMemoryCharacterRepository : CharacterRepository {
     override fun findById(id: CharacterId): Character? = characters[id]
 
     override fun findAll(): List<Character> = characters.values.toList()
+
+    override fun delete(id: CharacterId) {
+        characters.remove(id)
+    }
 }

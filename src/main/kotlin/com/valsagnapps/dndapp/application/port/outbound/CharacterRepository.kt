@@ -9,4 +9,6 @@ interface CharacterRepository {
     fun findById(id: CharacterId): Character?
 
     fun findAll(): List<Character>
+
+    fun delete(id: CharacterId)
 }

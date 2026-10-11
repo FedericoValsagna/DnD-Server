@@ -157,4 +157,37 @@ class CharacterPersistenceAdapterTest {
 
         assertEquals(updated, adapter.findById(character.id))
     }
+
+    @Test
+    fun `deletes a character with its skills and classes`() {
+        val deleted = character(
+            name = "Mialee",
+            skills = mapOf(Skill.ARCANA to Proficiency.PROFICIENT),
+            classes = listOf(
+                ClassLevel(CharacterClass.WIZARD, 3, Subclass.EVOCATION),
+                ClassLevel(CharacterClass.ROGUE, 1),
+            ),
+        )
+        val kept = character(name = "Tordek")
+        adapter.save(deleted)
+        adapter.save(kept)
+        entityManager.flush()
+        entityManager.clear()
+        assertEquals(1, countRows("character_skills", deleted.id))
+        assertEquals(2, countRows("character_classes", deleted.id))
+
+        adapter.delete(deleted.id)
+        entityManager.flush()
+        entityManager.clear()
+
+        assertNull(adapter.findById(deleted.id))
+        assertEquals(kept, adapter.findById(kept.id))
+        assertEquals(0, countRows("character_skills", deleted.id))
+        assertEquals(0, countRows("character_classes", deleted.id))
+    }
+
+    private fun countRows(table: String, id: CharacterId): Int =
+        entityManager.createNativeQuery("SELECT COUNT(*) FROM $table WHERE character_id = :id")
+            .setParameter("id", id.value)
+            .singleResult.let { (it as Number).toInt() }
 }
