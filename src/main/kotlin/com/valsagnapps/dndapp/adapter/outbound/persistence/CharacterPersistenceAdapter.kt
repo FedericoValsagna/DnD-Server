@@ -5,6 +5,8 @@ import com.valsagnapps.dndapp.domain.AbilityScores
 import com.valsagnapps.dndapp.domain.Character
 import com.valsagnapps.dndapp.domain.CharacterId
 import com.valsagnapps.dndapp.domain.ClassLevel
+import com.valsagnapps.dndapp.domain.DeathSaves
+import com.valsagnapps.dndapp.domain.HitPoints
 import com.valsagnapps.dndapp.domain.SkillProficiencies
 import org.springframework.stereotype.Component
 
@@ -29,7 +31,13 @@ private fun Character.toEntity() = CharacterEntity(
     intelligence = abilityScores.intelligence,
     wisdom = abilityScores.wisdom,
     charisma = abilityScores.charisma,
-    maxHitPoints = maxHitPoints,
+    maxHitPoints = hitPoints.max,
+    currentHitPoints = hitPoints.current,
+    temporaryHitPoints = hitPoints.temporary,
+    deathSaveSuccesses = hitPoints.deathSaves.successes,
+    deathSaveFailures = hitPoints.deathSaves.failures,
+    armorClassOverride = armorClassOverride,
+    baseSpeed = baseSpeed,
     skills = skillProficiencies.toMap().toMutableMap(),
     classes = classes.map { ClassLevelEmbeddable(it.characterClass, it.level, it.subclass) }.toMutableList(),
 )
@@ -39,6 +47,13 @@ private fun CharacterEntity.toDomain() = Character(
     name = name,
     classes = classes.map { ClassLevel(it.characterClass, it.level, it.subclass) },
     abilityScores = AbilityScores(strength, dexterity, constitution, intelligence, wisdom, charisma),
-    maxHitPoints = maxHitPoints,
+    hitPoints = HitPoints(
+        max = maxHitPoints,
+        current = currentHitPoints,
+        temporary = temporaryHitPoints,
+        deathSaves = DeathSaves(deathSaveSuccesses, deathSaveFailures),
+    ),
     skillProficiencies = SkillProficiencies.of(skills),
+    armorClassOverride = armorClassOverride,
+    baseSpeed = baseSpeed,
 )

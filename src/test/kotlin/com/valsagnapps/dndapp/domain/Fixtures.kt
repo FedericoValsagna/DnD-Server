@@ -17,5 +17,8 @@ fun character(
     classes: List<ClassLevel> = listOf(ClassLevel(characterClass, level)),
     abilityScores: AbilityScores = abilityScores(),
     maxHitPoints: Int = 10,
+    hitPoints: HitPoints = HitPoints(max = maxHitPoints),
     skills: Map<Skill, Proficiency> = emptyMap(),
-) = Character(id, name, classes, abilityScores, maxHitPoints, SkillProficiencies.of(skills))
+    armorClassOverride: Int? = null,
+    baseSpeed: Int = Character.DEFAULT_SPEED,
+) = Character(id, name, classes, abilityScores, hitPoints, SkillProficiencies.of(skills), armorClassOverride, baseSpeed)

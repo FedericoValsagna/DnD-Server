@@ -29,6 +29,12 @@ class CharacterEntity(
     val wisdom: Int,
     val charisma: Int,
     val maxHitPoints: Int,
+    val currentHitPoints: Int,
+    val temporaryHitPoints: Int,
+    val deathSaveSuccesses: Int,
+    val deathSaveFailures: Int,
+    val armorClassOverride: Int?,
+    val baseSpeed: Int,
     // EAGER porque open-in-view está apagado: el mapeo a dominio pasa fuera de la transacción.
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "character_skills", joinColumns = [JoinColumn(name = "character_id")])

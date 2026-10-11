@@ -1,0 +1,23 @@
+$kind: http-request
+name: Update speed
+url: "{{baseUrl}}/api/v1/characters/{{characterId}}/speed"
+method: PUT
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "baseSpeed": 25
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      const body = pm.response.json();
+
+      pm.test("base speed updated", function () {
+        pm.response.to.have.status(200);
+        pm.expect(body.baseSpeed).to.equal(25);
+      });
+order: 78

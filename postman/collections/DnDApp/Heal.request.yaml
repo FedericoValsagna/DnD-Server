@@ -1,0 +1,23 @@
+$kind: http-request
+name: Heal
+url: "{{baseUrl}}/api/v1/characters/{{characterId}}/healing"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "amount": 10
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      const body = pm.response.json();
+
+      pm.test("healed", function () {
+        pm.response.to.have.status(200);
+        pm.expect(body.currentHitPoints).to.equal(11);
+      });
+order: 74

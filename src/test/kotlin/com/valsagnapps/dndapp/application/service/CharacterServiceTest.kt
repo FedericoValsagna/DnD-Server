@@ -148,7 +148,7 @@ class CharacterServiceTest {
         val updated = service.updateMaxHitPoints(created.id, 45)
 
         assertEquals(45, updated.maxHitPoints)
-        assertEquals(created.copy(maxHitPoints = 45), repository.findById(created.id))
+        assertEquals(created.withMaxHitPoints(45), repository.findById(created.id))
     }
 
     @Test

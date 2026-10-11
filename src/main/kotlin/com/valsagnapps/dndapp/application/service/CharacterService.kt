@@ -18,6 +18,7 @@ import com.valsagnapps.dndapp.domain.CharacterClass
 import com.valsagnapps.dndapp.domain.CharacterId
 import com.valsagnapps.dndapp.domain.CharacterNotFoundException
 import com.valsagnapps.dndapp.domain.ClassLevel
+import com.valsagnapps.dndapp.domain.HitPoints
 import com.valsagnapps.dndapp.domain.SkillProficiencies
 import com.valsagnapps.dndapp.domain.Subclass
 
@@ -38,7 +39,7 @@ class CharacterService(private val characterRepository: CharacterRepository) :
             name = command.name,
             classes = command.classes,
             abilityScores = command.abilityScores,
-            maxHitPoints = command.maxHitPoints,
+            hitPoints = HitPoints(max = command.maxHitPoints),
             skillProficiencies = command.skillProficiencies,
         ),
     )
@@ -58,7 +59,7 @@ class CharacterService(private val characterRepository: CharacterRepository) :
         characterRepository.save(get(id).withSubclass(characterClass, subclass))
 
     override fun updateMaxHitPoints(id: CharacterId, maxHitPoints: Int): Character =
-        characterRepository.save(get(id).copy(maxHitPoints = maxHitPoints))
+        characterRepository.save(get(id).withMaxHitPoints(maxHitPoints))
 
     override fun updateName(id: CharacterId, name: String): Character =
         characterRepository.save(get(id).copy(name = name))

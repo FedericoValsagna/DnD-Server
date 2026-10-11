@@ -9,6 +9,8 @@ import com.valsagnapps.dndapp.domain.Character
 import com.valsagnapps.dndapp.domain.CharacterClass
 import com.valsagnapps.dndapp.domain.ClassFeature
 import com.valsagnapps.dndapp.domain.ClassLevel
+import com.valsagnapps.dndapp.domain.HitPoints
+import com.valsagnapps.dndapp.domain.LifeStatus
 import com.valsagnapps.dndapp.domain.Proficiencies
 import com.valsagnapps.dndapp.domain.Proficiency
 import com.valsagnapps.dndapp.domain.Skill
@@ -32,8 +34,8 @@ private const val MIN_LEVEL = Character.MIN_LEVEL.toLong()
 private const val MAX_LEVEL = Character.MAX_LEVEL.toLong()
 private const val MIN_SCORE = AbilityScores.MIN_SCORE.toLong()
 private const val MAX_SCORE = AbilityScores.MAX_SCORE.toLong()
-private const val MIN_HIT_POINTS = Character.MIN_HIT_POINTS.toLong()
-private const val MAX_HIT_POINTS = Character.MAX_HIT_POINTS.toLong()
+private const val MIN_HIT_POINTS = HitPoints.MIN_MAX.toLong()
+private const val MAX_HIT_POINTS = HitPoints.MAX_MAX.toLong()
 
 data class CreateCharacterRequest(
     @field:NotBlank @field:Size(max = Character.MAX_NAME_LENGTH) val name: String,
@@ -173,12 +175,23 @@ data class CharacterResponse(
     val classes: List<ClassLevelResponse>,
     val proficiencyBonus: Int,
     val maxHitPoints: Int,
+    val currentHitPoints: Int,
+    val temporaryHitPoints: Int,
+    val lifeStatus: LifeStatus,
+    val deathSaves: DeathSavesResponse,
     val hitDice: List<HitDiceResponse>,
     val abilities: Map<Ability, AbilityResponse>,
     val savingThrows: Map<Ability, SavingThrowResponse>,
     val skills: Map<Skill, SkillResponse>,
     val passivePerception: Int,
     val proficiencies: ProficienciesResponse,
+    // armorClass ya tiene aplicado el override (null si es la calculada).
+    val armorClass: Int,
+    val armorClassOverride: Int?,
+    val initiative: Int,
+    // speed es baseSpeed más lo que suman las clases.
+    val speed: Int,
+    val baseSpeed: Int,
 ) {
     companion object {
         fun from(character: Character) = CharacterResponse(
@@ -198,6 +211,10 @@ data class CharacterResponse(
             },
             proficiencyBonus = character.proficiencyBonus,
             maxHitPoints = character.maxHitPoints,
+            currentHitPoints = character.hitPoints.current,
+            temporaryHitPoints = character.hitPoints.temporary,
+            lifeStatus = character.hitPoints.status,
+            deathSaves = character.hitPoints.deathSaves.let { DeathSavesResponse(it.successes, it.failures) },
             hitDice = character.hitDice.map { (die, count) -> HitDiceResponse(die, count) },
             abilities = Ability.entries.associateWith {
                 AbilityResponse(
@@ -220,6 +237,11 @@ data class CharacterResponse(
             },
             passivePerception = character.passivePerception,
             proficiencies = ProficienciesResponse.from(character.proficiencies),
+            armorClass = character.armorClass,
+            armorClassOverride = character.armorClassOverride,
+            initiative = character.initiative,
+            speed = character.speed,
+            baseSpeed = character.baseSpeed,
         )
     }
 }
