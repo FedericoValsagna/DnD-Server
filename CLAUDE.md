@@ -72,6 +72,7 @@ Reglas:
 - Texto SRD: se toma de una fuente del SRD 5.1 (la API `dnd5eapi.co/api/2014`), nunca de memoria. Las opciones a elegir (Fighting Style, Hunter's Prey, ...) van dentro del texto de la feature que las agrupa.
 - El catálogo se expone en `GET /api/v1/classes` (clases con nivel de subclase y subclases, con nombre y `Source`) para que la app no duplique reglas.
 - El HP máximo se carga a mano (promedio o dados, lo decide el jugador): se persiste, no se calcula.
+- **Combate** (`HitPoints`, `CombatService`, `CombatController`): el estado de HP (actual, temporales, `LifeStatus`, `DeathSaves`) es un value object con las reglas de daño, curación, death saves y revivir; se persiste. Lo que el estado no permite ahora (curar a un muerto, ...) tira `CombatActionNotAllowedException` → 409. CA, iniciativa y velocidad se calculan en `Character` con dos valores manuales que se persisten hasta que existan equipo y razas: `armorClassOverride` y `baseSpeed`. Alert (+5 a la iniciativa) se suma cuando entren los feats. Decisiones en `../docs/features/combate.md`.
 - El plan de clases por slices y su estado están en `../docs/features/clases.md`.
 
 ## Testing
