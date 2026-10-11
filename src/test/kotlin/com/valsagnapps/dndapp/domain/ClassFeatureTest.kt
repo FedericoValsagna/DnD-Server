@@ -133,9 +133,16 @@ class ClassFeatureTest {
     }
 
     @Test
-    fun `classes without features loaded yet have none`() {
-        assertEquals(emptyList(), WARLOCK.features)
-        assertEquals(emptyList(), Subclass.FIEND.features)
+    fun `warlock and its patrons have their features loaded`() {
+        assertEquals(6, WARLOCK.features.size)
+        assertEquals(4, Subclass.ARCHFEY.features.size)
+        assertEquals(4, Subclass.FIEND.features.size)
+        assertEquals(4, Subclass.GREAT_OLD_ONE.features.size)
+    }
+
+    @Test
+    fun `subclasses without features loaded yet have none`() {
+        assertEquals(emptyList(), Subclass.BEAST_MASTER.features)
     }
 
     @Test
@@ -200,6 +207,8 @@ class ClassFeatureTest {
         assertTrue(Subclass.TOTEM_WARRIOR.features.all { it.srdText == null })
         assertTrue((ROGUE.features + Subclass.THIEF.features).all { it.srdText != null })
         assertTrue((Subclass.ASSASSIN.features + Subclass.ARCANE_TRICKSTER.features).all { it.srdText == null })
+        assertTrue((WARLOCK.features + Subclass.FIEND.features).all { it.srdText != null })
+        assertTrue((Subclass.ARCHFEY.features + Subclass.GREAT_OLD_ONE.features).all { it.srdText == null })
         assertTrue(
             Subclass.entries
                 .filter { it.characterClass == WIZARD && it != Subclass.EVOCATION }
