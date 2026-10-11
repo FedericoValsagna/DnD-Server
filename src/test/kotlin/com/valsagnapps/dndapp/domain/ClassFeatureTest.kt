@@ -67,6 +67,7 @@ class ClassFeatureTest {
         assertEquals(5, Subclass.TRICKERY.features.size)
         assertEquals(6, Subclass.WAR.features.size)
         assertEquals(4, Subclass.HUNTER.features.size)
+        assertEquals(4, Subclass.BEAST_MASTER.features.size)
     }
 
     @Test
@@ -146,8 +147,9 @@ class ClassFeatureTest {
     }
 
     @Test
-    fun `subclasses without features loaded yet have none`() {
-        assertEquals(emptyList(), Subclass.BEAST_MASTER.features)
+    fun `every class and subclass has its features loaded`() {
+        assertTrue(CharacterClass.entries.all { it.features.isNotEmpty() })
+        assertTrue(Subclass.entries.all { it.features.isNotEmpty() })
     }
 
     @Test
@@ -214,6 +216,8 @@ class ClassFeatureTest {
         assertTrue(Subclass.VALOR.features.all { it.srdText == null })
         assertTrue((BARBARIAN.features + Subclass.BERSERKER.features).all { it.srdText != null })
         assertTrue(Subclass.TOTEM_WARRIOR.features.all { it.srdText == null })
+        assertTrue((RANGER.features + Subclass.HUNTER.features).all { it.srdText != null })
+        assertTrue(Subclass.BEAST_MASTER.features.all { it.srdText == null })
         assertTrue((ROGUE.features + Subclass.THIEF.features).all { it.srdText != null })
         assertTrue((Subclass.ASSASSIN.features + Subclass.ARCANE_TRICKSTER.features).all { it.srdText == null })
         assertTrue((WARLOCK.features + Subclass.FIEND.features).all { it.srdText != null })

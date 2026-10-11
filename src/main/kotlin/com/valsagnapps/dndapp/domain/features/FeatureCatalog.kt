@@ -4,7 +4,8 @@ import com.valsagnapps.dndapp.domain.CharacterClass
 import com.valsagnapps.dndapp.domain.ClassFeature
 import com.valsagnapps.dndapp.domain.Subclass
 
-// Features por clase y subclase, en orden de nivel. Las clases y subclases sin cargar todavía no tienen features.
+// Features por clase y subclase, en orden de nivel. Están todas las del PHB; una clase o subclase que no figure acá
+// (por ejemplo, de un libro nuevo todavía sin cargar) no tiene features.
 internal val CLASS_FEATURES: Map<CharacterClass, List<ClassFeature>> = mapOf(
     CharacterClass.BARBARIAN to BARBARIAN_FEATURES,
     CharacterClass.BARD to BARD_FEATURES,
@@ -41,6 +42,7 @@ internal val SUBCLASS_FEATURES: Map<Subclass, List<ClassFeature>> = mapOf(
     Subclass.SHADOW to SHADOW_FEATURES,
     Subclass.FOUR_ELEMENTS to FOUR_ELEMENTS_FEATURES,
     Subclass.HUNTER to HUNTER_FEATURES,
+    Subclass.BEAST_MASTER to BEAST_MASTER_FEATURES,
     Subclass.THIEF to THIEF_FEATURES,
     Subclass.ASSASSIN to ASSASSIN_FEATURES,
     Subclass.ARCANE_TRICKSTER to ARCANE_TRICKSTER_FEATURES,

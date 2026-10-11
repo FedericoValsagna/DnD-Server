@@ -2,7 +2,7 @@ package com.valsagnapps.dndapp.domain.features
 
 import com.valsagnapps.dndapp.domain.ClassFeature
 
-// Ranger y Hunter: textos del SRD 5.1 y resúmenes propios.
+// Ranger y sus arquetipos. Ranger y Hunter son SRD: llevan el texto del SRD 5.1 además del resumen propio.
 internal val RANGER_FEATURES = listOf(
     ClassFeature(
         id = "RANGER_FAVORED_ENEMY",
@@ -257,5 +257,41 @@ internal val HUNTER_FEATURES = listOf(
             "the same attack against another creature (other than itself) of your choice.\n\nUncanny Dodge. When an " +
             "attacker that you can see hits you with an attack, you can use your reaction to halve the attack's " +
             "damage against you.",
+    ),
+)
+
+// Beast Master no es SRD: solo resúmenes propios.
+internal val BEAST_MASTER_FEATURES = listOf(
+    ClassFeature(
+        id = "BEAST_MASTER_RANGERS_COMPANION",
+        name = "Ranger's Companion",
+        level = 3,
+        summary =
+        "Gain a beast companion of Medium size or smaller and CR 1/4 or lower. Add your proficiency bonus to its AC, " +
+            "attack and damage rolls, and to the saves and skills it is proficient in; its hit point maximum is the " +
+            "higher of its normal one or four times your ranger level. It acts on your initiative and obeys you: you " +
+            "can order it to move for free, and use your action to make it Attack, Dash, Disengage, Dodge or Help. " +
+            "With Extra Attack, you can also make one weapon attack when you order it to Attack. If it dies, you can " +
+            "bond with another beast in 8 hours.",
+    ),
+    ClassFeature(
+        id = "BEAST_MASTER_EXCEPTIONAL_TRAINING",
+        name = "Exceptional Training",
+        level = 7,
+        summary =
+        "On a turn when your companion doesn't attack, you can use a bonus action to make it Dash, Disengage, Dodge " +
+            "or Help. Its attacks count as magical.",
+    ),
+    ClassFeature(
+        id = "BEAST_MASTER_BESTIAL_FURY",
+        name = "Bestial Fury",
+        level = 11,
+        summary = "When you order your companion to Attack, it makes two attacks or uses its Multiattack.",
+    ),
+    ClassFeature(
+        id = "BEAST_MASTER_SHARE_SPELLS",
+        name = "Share Spells",
+        level = 15,
+        summary = "When you cast a spell targeting yourself, it can also affect your companion if it is within 30 ft.",
     ),
 )
