@@ -1,0 +1,25 @@
+$kind: http-request
+name: Short rest
+url: "{{baseUrl}}/api/v1/characters/{{characterId}}/short-rest"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "hitDice": [{ "die": 8, "count": 1 }],
+      "roll": 1
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      const body = pm.response.json();
+
+      pm.test("one hit die spent and short rest resources recovered", function () {
+        pm.response.to.have.status(200);
+        pm.expect(body.hitDice.find(d => d.die === 8).used).to.equal(1);
+        body.resources.filter(r => r.recharge === "SHORT_REST").forEach(r => pm.expect(r.used).to.equal(0));
+      });
+order: 82

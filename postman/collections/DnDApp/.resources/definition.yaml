@@ -7,6 +7,7 @@ description: |-
   "Delete character" va último porque borra ese personaje.
   characterClass es la clase a la que "Update subclass" le elige subclase (FIGHTER, que deja "Update classes").
   resource es el recurso que gasta "Update resource" (CHANNEL_DIVINITY, del Cleric 2 que deja "Update classes").
+  "Short rest" gasta un d8 (el Hit Die del Cleric) y recupera el Channel Divinity; "Long rest" recupera todo.
 variables:
   characterId: ""
   characterClass: "FIGHTER"
