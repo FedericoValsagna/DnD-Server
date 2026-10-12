@@ -1,6 +1,11 @@
 package com.valsagnapps.dndapp.domain.features
 
+import com.valsagnapps.dndapp.domain.ActionType
 import com.valsagnapps.dndapp.domain.ClassFeature
+import com.valsagnapps.dndapp.domain.Recharge
+import com.valsagnapps.dndapp.domain.Resource
+import com.valsagnapps.dndapp.domain.Uses
+import com.valsagnapps.dndapp.domain.atLevel
 
 // Druid y sus círculos. Druid y Circle of the Land son SRD: llevan el texto del SRD 5.1 además del resumen propio.
 internal val DRUID_FEATURES = listOf(
@@ -92,6 +97,13 @@ internal val DRUID_FEATURES = listOf(
             "merge with it. Equipment that merges with the form has no effect until you leave the form.\n\nBeast " +
             "Shapes: 2nd level: CR 1/4 or below, no flying or swim speed; 4th level: CR 1/2 or below, no flying " +
             "speed; 8th level: CR 1 or below.",
+        actionType = ActionType.ACTION,
+        resource = Resource.WILD_SHAPE,
+        uses = Uses.byLevel(
+            Recharge.SHORT_REST,
+            atLevel(level = 2, uses = 2),
+            atLevel(level = 20, uses = null),
+        ),
     ),
     ClassFeature(
         id = "DRUID_ABILITY_SCORE_IMPROVEMENT",
@@ -159,6 +171,8 @@ internal val LAND_FEATURES = listOf(
             "slots can be 6th level or higher. You can't use this feature again until you finish a long rest.\n\nFor " +
             "example, when you are a 4th-level druid, you can recover up to two levels worth of spell slots. You can " +
             "recover either a 2nd-level slot or two 1st-level slots.",
+        resource = Resource.NATURAL_RECOVERY,
+        uses = Uses.fixed(count = 1, recharge = Recharge.LONG_REST),
     ),
     ClassFeature(
         id = "LAND_LANDS_STRIDE",
@@ -208,6 +222,8 @@ internal val MOON_FEATURES = listOf(
         summary =
         "Use Wild Shape as a bonus action. While transformed, bonus action: expend a spell slot to regain 1d8 hit " +
             "points per slot level.",
+        actionType = ActionType.BONUS_ACTION,
+        resource = Resource.WILD_SHAPE,
     ),
     ClassFeature(
         id = "MOON_CIRCLE_FORMS",
@@ -228,6 +244,7 @@ internal val MOON_FEATURES = listOf(
         name = "Elemental Wild Shape",
         level = 10,
         summary = "Spend two uses of Wild Shape at once to turn into an air, earth, fire or water elemental.",
+        resource = Resource.WILD_SHAPE,
     ),
     ClassFeature(
         id = "MOON_THOUSAND_FORMS",

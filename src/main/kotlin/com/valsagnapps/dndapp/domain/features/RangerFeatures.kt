@@ -1,5 +1,6 @@
 package com.valsagnapps.dndapp.domain.features
 
+import com.valsagnapps.dndapp.domain.ActionType
 import com.valsagnapps.dndapp.domain.ClassFeature
 
 // Ranger y sus arquetipos. Ranger y Hunter son SRD: llevan el texto del SRD 5.1 además del resumen propio.
@@ -103,6 +104,7 @@ internal val RANGER_FEATURES = listOf(
             "whether the following types of creatures are present within 1 mile of you (or within up to 6 miles if " +
             "you are in your favored terrain): aberrations, celestials, dragons, elementals, fey, fiends, and " +
             "undead. This feature doesn't reveal the creatures' location or number.",
+        actionType = ActionType.ACTION,
     ),
     ClassFeature(
         id = "RANGER_ABILITY_SCORE_IMPROVEMENT",
@@ -163,6 +165,7 @@ internal val RANGER_FEATURES = listOf(
         srdText =
         "Starting at 14th level, you can use the Hide action as a bonus action on your turn. Also, you can't be " +
             "tracked by nonmagical means, unless you choose to leave a trail.",
+        actionType = ActionType.BONUS_ACTION,
     ),
     ClassFeature(
         id = "RANGER_FERAL_SENSES",
@@ -239,6 +242,7 @@ internal val HUNTER_FEATURES = listOf(
             "separate attack roll for each target.\n\nWhirlwind Attack. You can use your action to make a melee " +
             "attack against any number of creatures within 5 feet of you, with a separate attack roll for each " +
             "target.",
+        actionType = ActionType.ACTION,
     ),
     ClassFeature(
         id = "HUNTER_SUPERIOR_HUNTERS_DEFENSE",
@@ -273,6 +277,7 @@ internal val BEAST_MASTER_FEATURES = listOf(
             "can order it to move for free, and use your action to make it Attack, Dash, Disengage, Dodge or Help. " +
             "With Extra Attack, you can also make one weapon attack when you order it to Attack. If it dies, you can " +
             "bond with another beast in 8 hours.",
+        actionType = ActionType.ACTION,
     ),
     ClassFeature(
         id = "BEAST_MASTER_EXCEPTIONAL_TRAINING",
@@ -281,6 +286,7 @@ internal val BEAST_MASTER_FEATURES = listOf(
         summary =
         "On a turn when your companion doesn't attack, you can use a bonus action to make it Dash, Disengage, Dodge " +
             "or Help. Its attacks count as magical.",
+        actionType = ActionType.BONUS_ACTION,
     ),
     ClassFeature(
         id = "BEAST_MASTER_BESTIAL_FURY",

@@ -21,4 +21,15 @@ fun character(
     skills: Map<Skill, Proficiency> = emptyMap(),
     armorClassOverride: Int? = null,
     baseSpeed: Int = Character.DEFAULT_SPEED,
-) = Character(id, name, classes, abilityScores, hitPoints, SkillProficiencies.of(skills), armorClassOverride, baseSpeed)
+    resourcesUsed: Map<Resource, Int> = emptyMap(),
+) = Character(
+    id,
+    name,
+    classes,
+    abilityScores,
+    hitPoints,
+    SkillProficiencies.of(skills),
+    armorClassOverride,
+    baseSpeed,
+    resourcesUsed,
+)

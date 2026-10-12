@@ -1,6 +1,12 @@
 package com.valsagnapps.dndapp.domain.features
 
+import com.valsagnapps.dndapp.domain.Ability
+import com.valsagnapps.dndapp.domain.ActionType
 import com.valsagnapps.dndapp.domain.ClassFeature
+import com.valsagnapps.dndapp.domain.Recharge
+import com.valsagnapps.dndapp.domain.Resource
+import com.valsagnapps.dndapp.domain.Uses
+import com.valsagnapps.dndapp.domain.atLevel
 
 // Wizard y sus escuelas. Wizard y School of Evocation son SRD: llevan el texto del SRD 5.1 además del resumen propio.
 internal val WIZARD_FEATURES = listOf(
@@ -54,6 +60,8 @@ internal val WIZARD_FEATURES = listOf(
             "combined level that is equal to or less than half your wizard level (rounded up), and none of the slots " +
             "can be 6th level or higher.\n\nFor example, if you're a 4th-level wizard, you can recover up to two " +
             "levels worth of spell slots. You can recover either a 2nd-level spell slot or two 1st-level spell slots.",
+        resource = Resource.ARCANE_RECOVERY,
+        uses = Uses.fixed(count = 1, recharge = Recharge.LONG_REST),
     ),
     ClassFeature(
         id = "WIZARD_ABILITY_SCORE_IMPROVEMENT",
@@ -93,6 +101,8 @@ internal val WIZARD_FEATURES = listOf(
             "of them once at 3rd level without expending a spell slot. When you do so, you can't do so again until " +
             "you finish a short or long rest.\n\nIf you want to cast either spell at a higher level, you must expend " +
             "a spell slot as normal.",
+        resource = Resource.SIGNATURE_SPELLS,
+        uses = Uses.fixed(count = 2, recharge = Recharge.SHORT_REST),
     ),
 )
 
@@ -155,6 +165,8 @@ internal val EVOCATION_FEATURES = listOf(
             "you take 2d12 necrotic damage for each level of the spell, immediately after you cast it. Each time you " +
             "use this feature again before finishing a long rest, the necrotic damage per spell level increases by " +
             "1d12. This damage ignores resistance and immunity.",
+        resource = Resource.OVERCHANNEL,
+        uses = Uses.fixed(count = 1, recharge = Recharge.LONG_REST),
     ),
 )
 
@@ -174,6 +186,11 @@ internal val ABJURATION_FEATURES = listOf(
         "When you cast an abjuration spell of 1st level or higher, create a ward (once per long rest) with twice " +
             "your wizard level + Intelligence modifier hit points that absorbs damage you take. Casting more " +
             "abjuration spells restores it by twice the spell level.",
+        resource = Resource.ARCANE_WARD,
+        uses = Uses(
+            formula = { wizardLevel, scores -> 2 * wizardLevel + scores.modifierOf(Ability.INTELLIGENCE) },
+            recharge = Recharge.LONG_REST,
+        ),
     ),
     ClassFeature(
         id = "ABJURATION_PROJECTED_WARD",
@@ -181,6 +198,8 @@ internal val ABJURATION_FEATURES = listOf(
         level = 6,
         summary =
         "Reaction: when a creature you can see within 30 ft takes damage, your Arcane Ward absorbs it instead.",
+        actionType = ActionType.REACTION,
+        resource = Resource.ARCANE_WARD,
     ),
     ClassFeature(
         id = "ABJURATION_IMPROVED_ABJURATION",
@@ -213,6 +232,7 @@ internal val CONJURATION_FEATURES = listOf(
         summary =
         "Action: conjure a nonmagical object you have seen, up to 3 ft on a side and 10 lb, within 10 ft. It lasts 1 " +
             "hour, until it takes damage or until you use this again.",
+        actionType = ActionType.ACTION,
     ),
     ClassFeature(
         id = "CONJURATION_BENIGN_TRANSPOSITION",
@@ -221,6 +241,9 @@ internal val CONJURATION_FEATURES = listOf(
         summary =
         "Action: teleport up to 30 ft to an unoccupied space you can see, or swap places with a willing Small or " +
             "Medium creature. Once per long rest, or until you cast a conjuration spell of 1st level or higher.",
+        actionType = ActionType.ACTION,
+        resource = Resource.BENIGN_TRANSPOSITION,
+        uses = Uses.fixed(count = 1, recharge = Recharge.LONG_REST),
     ),
     ClassFeature(
         id = "CONJURATION_FOCUSED_CONJURATION",
@@ -252,6 +275,12 @@ internal val DIVINATION_FEATURES = listOf(
         "After a long rest, roll two d20s and keep them. You can replace an attack roll, saving throw or ability " +
             "check of a creature you can see with one of them before it is rolled. Unused rolls are lost on a long " +
             "rest.",
+        resource = Resource.PORTENT,
+        uses = Uses.byLevel(
+            Recharge.LONG_REST,
+            atLevel(level = 2, uses = 2),
+            atLevel(level = 14, uses = 3),
+        ),
     ),
     ClassFeature(
         id = "DIVINATION_EXPERT_DIVINATION",
@@ -269,6 +298,9 @@ internal val DIVINATION_FEATURES = listOf(
         "Action: until you are incapacitated or take a rest, gain one of darkvision 60 ft, ethereal sight 60 ft, the " +
             "ability to read any language, or seeing invisible creatures and objects within 10 ft. Once per short or " +
             "long rest.",
+        actionType = ActionType.ACTION,
+        resource = Resource.THE_THIRD_EYE,
+        uses = Uses.fixed(count = 1, recharge = Recharge.SHORT_REST),
     ),
     ClassFeature(
         id = "DIVINATION_GREATER_PORTENT",
@@ -294,6 +326,7 @@ internal val ENCHANTMENT_FEATURES = listOf(
         "Action: a creature within 5 ft that can see or hear you makes a Wisdom save or is charmed until the end of " +
             "your next turn: speed 0, incapacitated and dazed. You can extend it with your action each turn. On a " +
             "success, or once it ends, you can't use it on that creature until a long rest.",
+        actionType = ActionType.ACTION,
     ),
     ClassFeature(
         id = "ENCHANTMENT_INSTINCTIVE_CHARM",
@@ -302,6 +335,7 @@ internal val ENCHANTMENT_FEATURES = listOf(
         summary =
         "Reaction: when a creature within 30 ft attacks you, it makes a Wisdom save or must target the closest other " +
             "creature, or lose the attack if there is none. On a success it is immune until a long rest.",
+        actionType = ActionType.REACTION,
     ),
     ClassFeature(
         id = "ENCHANTMENT_SPLIT_ENCHANTMENT",
@@ -341,6 +375,7 @@ internal val ILLUSION_FEATURES = listOf(
         level = 6,
         summary =
         "Action: change the nature of an illusion spell with a duration of 1 minute or longer that you can see.",
+        actionType = ActionType.ACTION,
     ),
     ClassFeature(
         id = "ILLUSION_ILLUSORY_SELF",
@@ -349,6 +384,9 @@ internal val ILLUSION_FEATURES = listOf(
         summary =
         "Reaction: when a creature attacks you, an illusory duplicate makes the attack miss. Once per short or long " +
             "rest.",
+        actionType = ActionType.REACTION,
+        resource = Resource.ILLUSORY_SELF,
+        uses = Uses.fixed(count = 1, recharge = Recharge.SHORT_REST),
     ),
     ClassFeature(
         id = "ILLUSION_ILLUSORY_REALITY",
@@ -357,6 +395,7 @@ internal val ILLUSION_FEATURES = listOf(
         summary =
         "Bonus action: when you cast an illusion spell of 1st level or higher, make one inanimate, nonmagical object " +
             "of the illusion real for 1 minute. It can't deal damage or harm anyone directly.",
+        actionType = ActionType.BONUS_ACTION,
     ),
 )
 
@@ -398,6 +437,7 @@ internal val NECROMANCY_FEATURES = listOf(
         "Action: an undead within 60 ft makes a Charisma save or becomes friendly and obeys you until you use this " +
             "again. Undead with Intelligence 8 or higher have advantage, and those with 12 or more repeat the save " +
             "every hour.",
+        actionType = ActionType.ACTION,
     ),
 )
 
@@ -434,6 +474,9 @@ internal val TRANSMUTATION_FEATURES = listOf(
         summary =
         "Add polymorph to your spellbook. Once per short or long rest you can cast it on yourself without a slot, to " +
             "become a beast of challenge rating 1 or lower.",
+        actionType = ActionType.ACTION,
+        resource = Resource.SHAPECHANGER,
+        uses = Uses.fixed(count = 1, recharge = Recharge.SHORT_REST),
     ),
     ClassFeature(
         id = "TRANSMUTATION_MASTER_TRANSMUTER",
@@ -443,5 +486,8 @@ internal val TRANSMUTATION_FEATURES = listOf(
         "Action: destroy your transmuter's stone for one effect: transform a nonmagical object into another of " +
             "similar size and value, remove curses, diseases and poisons and heal a creature fully, cast raise dead " +
             "without a slot, or make a creature up to 3 years younger. Then make a new stone after a long rest.",
+        actionType = ActionType.ACTION,
+        resource = Resource.MASTER_TRANSMUTER,
+        uses = Uses.fixed(count = 1, recharge = Recharge.LONG_REST),
     ),
 )

@@ -1,6 +1,7 @@
 package com.valsagnapps.dndapp.adapter.outbound.persistence
 
 import com.valsagnapps.dndapp.domain.Proficiency
+import com.valsagnapps.dndapp.domain.Resource
 import com.valsagnapps.dndapp.domain.Skill
 import jakarta.persistence.CollectionTable
 import jakarta.persistence.Column
@@ -47,4 +48,11 @@ class CharacterEntity(
     @CollectionTable(name = "character_classes", joinColumns = [JoinColumn(name = "character_id")])
     @OrderColumn(name = "position")
     val classes: MutableList<ClassLevelEmbeddable>,
+    // Solo los recursos con usos gastados.
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "character_resources", joinColumns = [JoinColumn(name = "character_id")])
+    @MapKeyColumn(name = "resource")
+    @MapKeyEnumerated(EnumType.STRING)
+    @Column(name = "used")
+    val resourcesUsed: MutableMap<Resource, Int>,
 )

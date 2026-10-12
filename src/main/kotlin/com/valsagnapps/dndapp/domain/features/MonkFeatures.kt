@@ -1,6 +1,10 @@
 package com.valsagnapps.dndapp.domain.features
 
+import com.valsagnapps.dndapp.domain.ActionType
 import com.valsagnapps.dndapp.domain.ClassFeature
+import com.valsagnapps.dndapp.domain.Recharge
+import com.valsagnapps.dndapp.domain.Resource
+import com.valsagnapps.dndapp.domain.Uses
 
 // Monk y sus tradiciones. Monk y Way of the Open Hand son SRD: llevan el texto del SRD 5.1 además del resumen propio.
 internal val MONK_FEATURES = listOf(
@@ -37,6 +41,7 @@ internal val MONK_FEATURES = listOf(
             "blade (called a kama). Whatever name you use for a monk weapon, you can use the game statistics " +
             "provided for the weapon.\n\nMartial Arts die: 1d4 at 1st level, 1d6 at 5th level, 1d8 at 11th level, " +
             "1d10 at 17th level.",
+        actionType = ActionType.BONUS_ACTION,
     ),
     ClassFeature(
         id = "MONK_KI",
@@ -56,6 +61,8 @@ internal val MONK_FEATURES = listOf(
             "your ki points.\n\nSome of your ki features require your target to make a saving throw to resist the " +
             "feature's effects. The saving throw DC is calculated as follows:\n\nKi save DC = 8 + your proficiency " +
             "bonus + your Wisdom modifier\n\nKi points: equal to your monk level (2 at 2nd level, 20 at 20th).",
+        resource = Resource.KI,
+        uses = Uses.perClassLevel(multiplier = 1, recharge = Recharge.SHORT_REST),
     ),
     ClassFeature(
         id = "MONK_FLURRY_OF_BLOWS",
@@ -65,6 +72,8 @@ internal val MONK_FEATURES = listOf(
         srdText =
         "Immediately after you take the Attack action on your turn, you can spend 1 ki point to make two unarmed " +
             "strikes as a bonus action.",
+        actionType = ActionType.BONUS_ACTION,
+        resource = Resource.KI,
     ),
     ClassFeature(
         id = "MONK_PATIENT_DEFENSE",
@@ -72,6 +81,8 @@ internal val MONK_FEATURES = listOf(
         level = 2,
         summary = "1 ki point: Dodge as a bonus action.",
         srdText = "You can spend 1 ki point to take the Dodge action as a bonus action on your turn.",
+        actionType = ActionType.BONUS_ACTION,
+        resource = Resource.KI,
     ),
     ClassFeature(
         id = "MONK_STEP_OF_THE_WIND",
@@ -81,6 +92,8 @@ internal val MONK_FEATURES = listOf(
         srdText =
         "You can spend 1 ki point to take the Disengage or Dash action as a bonus action on your turn, and your jump " +
             "distance is doubled for the turn.",
+        actionType = ActionType.BONUS_ACTION,
+        resource = Resource.KI,
     ),
     ClassFeature(
         id = "MONK_UNARMORED_MOVEMENT",
@@ -112,6 +125,7 @@ internal val MONK_FEATURES = listOf(
             "you just caught, as part of the same reaction. You make this attack with proficiency, regardless of " +
             "your weapon proficiencies, and the missile counts as a monk weapon for the attack, which has a normal " +
             "range of 20 feet and a long range of 60 feet.",
+        actionType = ActionType.REACTION,
     ),
     ClassFeature(
         id = "MONK_ABILITY_SCORE_IMPROVEMENT",
@@ -131,6 +145,7 @@ internal val MONK_FEATURES = listOf(
         srdText =
         "Beginning at 4th level, you can use your reaction when you fall to reduce any falling damage you take by an " +
             "amount equal to five times your monk level.",
+        actionType = ActionType.REACTION,
     ),
     ClassFeature(
         id = "MONK_EXTRA_ATTACK",
@@ -152,6 +167,7 @@ internal val MONK_FEATURES = listOf(
         "Starting at 5th level, you can interfere with the flow of ki in an opponent's body. When you hit another " +
             "creature with a melee weapon attack, you can spend 1 ki point to attempt a stunning strike. The target " +
             "must succeed on a Constitution saving throw or be stunned until the end of your next turn.",
+        resource = Resource.KI,
     ),
     ClassFeature(
         id = "MONK_KI_EMPOWERED_STRIKES",
@@ -181,6 +197,7 @@ internal val MONK_FEATURES = listOf(
         srdText =
         "Starting at 7th level, you can use your action to end one effect on yourself that is causing you to be " +
             "charmed or frightened.",
+        actionType = ActionType.ACTION,
     ),
     ClassFeature(
         id = "MONK_PURITY_OF_BODY",
@@ -207,6 +224,7 @@ internal val MONK_FEATURES = listOf(
         "Beginning at 14th level, your mastery of ki grants you proficiency in all saving throws.\n\nAdditionally, " +
             "whenever you make a saving throw and fail, you can spend 1 ki point to reroll it and take the second " +
             "result.",
+        resource = Resource.KI,
     ),
     ClassFeature(
         id = "MONK_TIMELESS_BODY",
@@ -229,6 +247,8 @@ internal val MONK_FEATURES = listOf(
             "During that time, you also have resistance to all damage but force damage.\n\nAdditionally, you can " +
             "spend 8 ki points to cast the astral projection spell, without needing material components. When you do " +
             "so, you can't take any other creatures with you.",
+        actionType = ActionType.ACTION,
+        resource = Resource.KI,
     ),
     ClassFeature(
         id = "MONK_PERFECT_SELF",
@@ -263,6 +283,9 @@ internal val OPEN_HAND_FEATURES = listOf(
         srdText =
         "At 6th level, you gain the ability to heal yourself. As an action, you can regain hit points equal to three " +
             "times your monk level. You must finish a long rest before you can use this feature again.",
+        actionType = ActionType.ACTION,
+        resource = Resource.WHOLENESS_OF_BODY,
+        uses = Uses.fixed(count = 1, recharge = Recharge.LONG_REST),
     ),
     ClassFeature(
         id = "OPEN_HAND_TRANQUILITY",
@@ -293,6 +316,7 @@ internal val OPEN_HAND_FEATURES = listOf(
             "action, the creature must make a Constitution saving throw. If it fails, it is reduced to 0 hit points. " +
             "If it succeeds, it takes 10d10 necrotic damage.\n\nYou can have only one creature under the effect of " +
             "this feature at a time. You can choose to end the vibrations harmlessly without using an action.",
+        resource = Resource.KI,
     ),
 )
 
@@ -305,6 +329,8 @@ internal val SHADOW_FEATURES = listOf(
         summary =
         "Spend 2 ki points to cast darkness, darkvision, pass without trace or silence without material components. " +
             "You also learn the minor illusion cantrip.",
+        actionType = ActionType.ACTION,
+        resource = Resource.KI,
     ),
     ClassFeature(
         id = "SHADOW_SHADOW_STEP",
@@ -313,6 +339,7 @@ internal val SHADOW_FEATURES = listOf(
         summary =
         "Bonus action: from dim light or darkness, teleport up to 60 ft to a space you can see that is also in dim " +
             "light or darkness, and gain advantage on your first melee attack before the end of the turn.",
+        actionType = ActionType.BONUS_ACTION,
     ),
     ClassFeature(
         id = "SHADOW_CLOAK_OF_SHADOWS",
@@ -320,6 +347,7 @@ internal val SHADOW_FEATURES = listOf(
         level = 11,
         summary =
         "Action: in dim light or darkness, become invisible until you attack, cast a spell or are in bright light.",
+        actionType = ActionType.ACTION,
     ),
     ClassFeature(
         id = "SHADOW_OPPORTUNIST",
@@ -327,6 +355,7 @@ internal val SHADOW_FEATURES = listOf(
         level = 17,
         summary =
         "Reaction: when a creature within 5 ft is hit by someone else's attack, make a melee attack against it.",
+        actionType = ActionType.REACTION,
     ),
 )
 
@@ -351,5 +380,7 @@ internal val FOUR_ELEMENTS_FEATURES = listOf(
             "ki: fireball); Mist Stance (4 ki: gaseous form on yourself); Ride the Wind (4 ki: fly on yourself). " +
             "From 17th: Breath of Winter (6 ki: cone of cold); River of Hungry Flame (5 ki: wall of fire); Wave of " +
             "Rolling Earth (6 ki: wall of stone).",
+        actionType = ActionType.ACTION,
+        resource = Resource.KI,
     ),
 )

@@ -1,6 +1,10 @@
 package com.valsagnapps.dndapp.domain.features
 
+import com.valsagnapps.dndapp.domain.ActionType
 import com.valsagnapps.dndapp.domain.ClassFeature
+import com.valsagnapps.dndapp.domain.Recharge
+import com.valsagnapps.dndapp.domain.Resource
+import com.valsagnapps.dndapp.domain.Uses
 
 // Rogue y sus arquetipos. Rogue y Thief son SRD: llevan el texto del SRD 5.1 además del resumen propio.
 internal val ROGUE_FEATURES = listOf(
@@ -59,6 +63,7 @@ internal val ROGUE_FEATURES = listOf(
         "Starting at 2nd level, your quick thinking and agility allow you to move and act quickly. You can take a " +
             "bonus action on each of your turns in combat. This action can be used only to take the Dash, Disengage, " +
             "or Hide action.",
+        actionType = ActionType.BONUS_ACTION,
     ),
     ClassFeature(
         id = "ROGUE_ABILITY_SCORE_IMPROVEMENT",
@@ -78,6 +83,7 @@ internal val ROGUE_FEATURES = listOf(
         srdText =
         "Starting at 5th level, when an attacker that you can see hits you with an attack, you can use your reaction " +
             "to halve the attack's damage against you.",
+        actionType = ActionType.REACTION,
     ),
     ClassFeature(
         id = "ROGUE_EVASION",
@@ -137,6 +143,8 @@ internal val ROGUE_FEATURES = listOf(
             "within range, you can turn the miss into a hit. Alternatively, if you fail an ability check, you can " +
             "treat the d20 roll as a 20.\n\nOnce you use this feature, you can't use it again until you finish a " +
             "short or long rest.",
+        resource = Resource.STROKE_OF_LUCK,
+        uses = Uses.fixed(count = 1, recharge = Recharge.SHORT_REST),
     ),
 )
 
@@ -152,6 +160,7 @@ internal val THIEF_FEATURES = listOf(
         "Starting at 3rd level, you can use the bonus action granted by your Cunning Action to make a Dexterity " +
             "(Sleight of Hand) check, use your thieves' tools to disarm a trap or open a lock, or take the Use an " +
             "Object action.",
+        actionType = ActionType.BONUS_ACTION,
     ),
     ClassFeature(
         id = "THIEF_SECOND_STORY_WORK",
@@ -259,6 +268,7 @@ internal val ARCANE_TRICKSTER_FEATURES = listOf(
             "carries, and pick locks or disarm traps with thieves' tools at range. Doing it unnoticed takes a " +
             "Dexterity (Sleight of Hand) check against the creature's Wisdom (Perception). You can control the hand " +
             "with your Cunning Action bonus action.",
+        actionType = ActionType.BONUS_ACTION,
     ),
     ClassFeature(
         id = "ARCANE_TRICKSTER_MAGICAL_AMBUSH",
@@ -275,6 +285,7 @@ internal val ARCANE_TRICKSTER_FEATURES = listOf(
         summary =
         "Bonus action: pick a creature within 5 ft of your mage hand; you have advantage on attack rolls against it " +
             "until the end of the turn.",
+        actionType = ActionType.BONUS_ACTION,
     ),
     ClassFeature(
         id = "ARCANE_TRICKSTER_SPELL_THIEF",
@@ -285,5 +296,8 @@ internal val ARCANE_TRICKSTER_FEATURES = listOf(
             "its spellcasting ability against your spell save DC. On a failure the spell has no effect on you and, " +
             "if it is of 1st level or higher and of a level you can cast, you steal it: you know it and can cast it " +
             "with your slots for 8 hours, and the creature can't cast it during that time. Once per long rest.",
+        actionType = ActionType.REACTION,
+        resource = Resource.SPELL_THIEF,
+        uses = Uses.fixed(count = 1, recharge = Recharge.LONG_REST),
     ),
 )

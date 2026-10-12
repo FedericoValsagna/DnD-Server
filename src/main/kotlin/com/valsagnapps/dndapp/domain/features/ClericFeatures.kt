@@ -1,6 +1,12 @@
 package com.valsagnapps.dndapp.domain.features
 
+import com.valsagnapps.dndapp.domain.Ability
+import com.valsagnapps.dndapp.domain.ActionType
 import com.valsagnapps.dndapp.domain.ClassFeature
+import com.valsagnapps.dndapp.domain.Recharge
+import com.valsagnapps.dndapp.domain.Resource
+import com.valsagnapps.dndapp.domain.Uses
+import com.valsagnapps.dndapp.domain.atLevel
 
 // Cleric y sus dominios. Cleric y Life Domain son SRD: llevan el texto del SRD 5.1 además del resumen propio.
 internal val CLERIC_FEATURES = listOf(
@@ -53,6 +59,13 @@ internal val CLERIC_FEATURES = listOf(
             "save DC.\n\nBeginning at 6th level, you can use your Channel Divinity twice between rests, and " +
             "beginning at 18th level, you can use it three times between rests. When you finish a short or long " +
             "rest, you regain your expended uses.",
+        resource = Resource.CHANNEL_DIVINITY,
+        uses = Uses.byLevel(
+            Recharge.SHORT_REST,
+            atLevel(level = 2, uses = 1),
+            atLevel(level = 6, uses = 2),
+            atLevel(level = 18, uses = 3),
+        ),
     ),
     ClassFeature(
         id = "CLERIC_TURN_UNDEAD",
@@ -70,6 +83,8 @@ internal val CLERIC_FEATURES = listOf(
             "30 feet of you. It also can't take reactions. For its action, it can use only the Dash action or try " +
             "to escape from an effect that prevents it from moving. If there's nowhere to move, the creature can " +
             "use the Dodge action.",
+        actionType = ActionType.ACTION,
+        resource = Resource.CHANNEL_DIVINITY,
     ),
     ClassFeature(
         id = "CLERIC_ABILITY_SCORE_IMPROVEMENT",
@@ -110,6 +125,9 @@ internal val CLERIC_FEATURES = listOf(
             "cleric domain spell would be appropriate.\n\nIf your deity intervenes, you can't use this feature " +
             "again for 7 days. Otherwise, you can use it again after you finish a long rest.\n\nAt 20th level, your " +
             "call for intervention succeeds automatically, no roll required.",
+        actionType = ActionType.ACTION,
+        resource = Resource.DIVINE_INTERVENTION,
+        uses = Uses.fixed(count = 1, recharge = Recharge.LONG_REST),
     ),
 )
 
@@ -146,6 +164,8 @@ internal val LIFE_FEATURES = listOf(
             "five times your cleric level.\n\nChoose any creatures within 30 feet of you, and divide those hit " +
             "points among them. This feature can restore a creature to no more than half of its hit point maximum. " +
             "You can't use this feature on an undead or a construct.",
+        actionType = ActionType.ACTION,
+        resource = Resource.CHANNEL_DIVINITY,
     ),
     ClassFeature(
         id = "LIFE_BLESSED_HEALER",
@@ -203,6 +223,8 @@ internal val NATURE_FEATURES = listOf(
         summary = "Action: each beast or plant creature within 30 ft that can see you makes a Wisdom save. On a " +
             "failure it is charmed by you for 1 minute or until it takes damage, and is friendly to you and the " +
             "creatures you choose.",
+        actionType = ActionType.ACTION,
+        resource = Resource.CHANNEL_DIVINITY,
     ),
     ClassFeature(
         id = "NATURE_DAMPEN_ELEMENTS",
@@ -210,6 +232,7 @@ internal val NATURE_FEATURES = listOf(
         level = 6,
         summary = "Reaction: when you or a creature within 30 ft takes acid, cold, fire, lightning or thunder " +
             "damage, grant resistance against that damage.",
+        actionType = ActionType.REACTION,
     ),
     ClassFeature(
         id = "NATURE_DIVINE_STRIKE",
@@ -224,6 +247,7 @@ internal val NATURE_FEATURES = listOf(
         level = 17,
         summary = "Bonus action: command the creatures charmed by your Charm Animals and Plants, telling each one " +
             "what it does on its next turn.",
+        actionType = ActionType.BONUS_ACTION,
     ),
 )
 
@@ -242,6 +266,8 @@ internal val KNOWLEDGE_FEATURES = listOf(
         name = "Channel Divinity: Knowledge of the Ages",
         level = 2,
         summary = "Action: gain proficiency with one skill or tool of your choice for 10 minutes.",
+        actionType = ActionType.ACTION,
+        resource = Resource.CHANNEL_DIVINITY,
     ),
     ClassFeature(
         id = "KNOWLEDGE_READ_THOUGHTS",
@@ -252,6 +278,8 @@ internal val KNOWLEDGE_FEATURES = listOf(
             "minute while it stays within 60 ft, and during that time you can use an action to end the effect and " +
             "cast suggestion on it without a slot; it fails the save automatically. On a success you can't try again " +
             "on it until a long rest.",
+        actionType = ActionType.ACTION,
+        resource = Resource.CHANNEL_DIVINITY,
     ),
     ClassFeature(
         id = "KNOWLEDGE_POTENT_SPELLCASTING",
@@ -269,6 +297,8 @@ internal val KNOWLEDGE_FEATURES = listOf(
             "and lost it, plus a recent significant event involving it. Area reading: for each minute, one " +
             "significant event in your surroundings, from the most recent back to as many days ago as your Wisdom " +
             "score. Once per short or long rest.",
+        resource = Resource.VISIONS_OF_THE_PAST,
+        uses = Uses.fixed(count = 1, recharge = Recharge.SHORT_REST),
     ),
 )
 
@@ -286,6 +316,9 @@ internal val LIGHT_FEATURES = listOf(
         summary =
         "Reaction when a creature you can see within 30 ft attacks you: impose disadvantage on the roll (creatures " +
             "that can't be blinded are immune). Uses equal to your Wisdom modifier (minimum 1) per long rest.",
+        actionType = ActionType.REACTION,
+        resource = Resource.WARDING_FLARE,
+        uses = Uses.abilityModifier(Ability.WISDOM, Recharge.LONG_REST),
     ),
     ClassFeature(
         id = "LIGHT_RADIANCE_OF_THE_DAWN",
@@ -295,6 +328,8 @@ internal val LIGHT_FEATURES = listOf(
         "Action: dispel magical darkness within 30 ft, and each hostile creature within 30 ft makes a Constitution " +
             "save, taking 2d10 + cleric level radiant damage on a failure or half on a success. Total cover " +
             "protects.",
+        actionType = ActionType.ACTION,
+        resource = Resource.CHANNEL_DIVINITY,
     ),
     ClassFeature(
         id = "LIGHT_IMPROVED_FLARE",
@@ -317,6 +352,7 @@ internal val LIGHT_FEATURES = listOf(
         "Action: emit an aura of sunlight for 1 minute or until you dismiss it (bright light in 60 ft, dim light 30 " +
             "ft more). Your enemies in the bright light have disadvantage on saves against spells that deal fire or " +
             "radiant damage.",
+        actionType = ActionType.ACTION,
     ),
 )
 
@@ -335,12 +371,16 @@ internal val TEMPEST_FEATURES = listOf(
         "Reaction when a creature within 5 ft that you can see hits you: it makes a Dexterity save, taking 2d8 " +
             "lightning or thunder damage (your choice) on a failure or half on a success. Uses equal to your Wisdom " +
             "modifier (minimum 1) per long rest.",
+        actionType = ActionType.REACTION,
+        resource = Resource.WRATH_OF_THE_STORM,
+        uses = Uses.abilityModifier(Ability.WISDOM, Recharge.LONG_REST),
     ),
     ClassFeature(
         id = "TEMPEST_DESTRUCTIVE_WRATH",
         name = "Channel Divinity: Destructive Wrath",
         level = 2,
         summary = "When you roll lightning or thunder damage, deal the maximum instead of rolling.",
+        resource = Resource.CHANNEL_DIVINITY,
     ),
     ClassFeature(
         id = "TEMPEST_THUNDERBOLT_STRIKE",
@@ -371,6 +411,7 @@ internal val TRICKERY_FEATURES = listOf(
         summary =
         "Action: a willing creature you touch, other than you, has advantage on Dexterity (Stealth) checks for 1 " +
             "hour or until you use this feature again.",
+        actionType = ActionType.ACTION,
     ),
     ClassFeature(
         id = "TRICKERY_INVOKE_DUPLICITY",
@@ -381,12 +422,16 @@ internal val TRICKERY_FEATURES = listOf(
             "action: move it up to 30 ft (it must stay within 120 ft). You can cast spells as if you were in its " +
             "space, and you have advantage on attacks against a creature that is within 5 ft of both you and the " +
             "duplicate.",
+        actionType = ActionType.ACTION,
+        resource = Resource.CHANNEL_DIVINITY,
     ),
     ClassFeature(
         id = "TRICKERY_CLOAK_OF_SHADOWS",
         name = "Channel Divinity: Cloak of Shadows",
         level = 6,
         summary = "Action: become invisible until the end of your next turn or until you attack or cast a spell.",
+        actionType = ActionType.ACTION,
+        resource = Resource.CHANNEL_DIVINITY,
     ),
     ClassFeature(
         id = "TRICKERY_DIVINE_STRIKE",
@@ -416,12 +461,16 @@ internal val WAR_FEATURES = listOf(
         summary =
         "When you take the Attack action, you can make one weapon attack as a bonus action. Uses equal to your " +
             "Wisdom modifier (minimum 1) per long rest.",
+        actionType = ActionType.BONUS_ACTION,
+        resource = Resource.WAR_PRIEST,
+        uses = Uses.abilityModifier(Ability.WISDOM, Recharge.LONG_REST),
     ),
     ClassFeature(
         id = "WAR_GUIDED_STRIKE",
         name = "Channel Divinity: Guided Strike",
         level = 2,
         summary = "+10 to one of your attack rolls, chosen after seeing the roll but before knowing if it hits.",
+        resource = Resource.CHANNEL_DIVINITY,
     ),
     ClassFeature(
         id = "WAR_WAR_GODS_BLESSING",
@@ -430,6 +479,8 @@ internal val WAR_FEATURES = listOf(
         summary =
         "Reaction when a creature within 30 ft makes an attack roll: give it +10, after seeing the roll but before " +
             "knowing if it hits.",
+        actionType = ActionType.REACTION,
+        resource = Resource.CHANNEL_DIVINITY,
     ),
     ClassFeature(
         id = "WAR_DIVINE_STRIKE",

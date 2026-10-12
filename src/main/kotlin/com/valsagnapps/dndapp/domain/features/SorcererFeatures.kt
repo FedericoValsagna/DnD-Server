@@ -1,6 +1,10 @@
 package com.valsagnapps.dndapp.domain.features
 
+import com.valsagnapps.dndapp.domain.ActionType
 import com.valsagnapps.dndapp.domain.ClassFeature
+import com.valsagnapps.dndapp.domain.Recharge
+import com.valsagnapps.dndapp.domain.Resource
+import com.valsagnapps.dndapp.domain.Uses
 
 // Sorcerer y sus orígenes. Sorcerer y Draconic Bloodline son SRD: llevan el texto del SRD 5.1 además del
 // resumen propio.
@@ -56,6 +60,9 @@ internal val SORCERER_FEATURES = listOf(
             "rest.\n\nCreating Spell Slots (spell slot level: sorcery point cost): 1st: 2, 2nd: 3, 3rd: 5, 4th: 6, " +
             "5th: 7.\n\nConverting a Spell Slot to Sorcery Points. As a bonus action on your turn, you can expend " +
             "one spell slot and gain a number of sorcery points equal to the slot's level.",
+        actionType = ActionType.BONUS_ACTION,
+        resource = Resource.SORCERY_POINTS,
+        uses = Uses.perClassLevel(multiplier = 1, recharge = Recharge.LONG_REST),
     ),
     ClassFeature(
         id = "SORCERER_METAMAGIC",
@@ -91,6 +98,7 @@ internal val SORCERER_FEATURES = listOf(
             "cantrip).\n\nTo be eligible, a spell must be incapable of targeting more than one creature at the " +
             "spell's current level. For example, magic missile and scorching ray aren't eligible, but ray of frost " +
             "is.",
+        resource = Resource.SORCERY_POINTS,
     ),
     ClassFeature(
         id = "SORCERER_ABILITY_SCORE_IMPROVEMENT",
@@ -151,6 +159,7 @@ internal val DRACONIC_BLOODLINE_FEATURES = listOf(
         "Starting at 6th level, when you cast a spell that deals damage of the type associated with your draconic " +
             "ancestry, you can add your Charisma modifier to one damage roll of that spell. At the same time, you " +
             "can spend 1 sorcery point to gain resistance to that damage type for 1 hour.",
+        resource = Resource.SORCERY_POINTS,
     ),
     ClassFeature(
         id = "DRACONIC_BLOODLINE_DRAGON_WINGS",
@@ -165,6 +174,7 @@ internal val DRACONIC_BLOODLINE_FEATURES = listOf(
             "you dismiss them as a bonus action on your turn.\n\nYou can't manifest your wings while wearing armor " +
             "unless the armor is made to accommodate them, and clothing not made to accommodate your wings might be " +
             "destroyed when you manifest them.",
+        actionType = ActionType.BONUS_ACTION,
     ),
     ClassFeature(
         id = "DRACONIC_BLOODLINE_DRACONIC_PRESENCE",
@@ -182,6 +192,8 @@ internal val DRACONIC_BLOODLINE_FEATURES = listOf(
             "starts its turn in this aura must succeed on a Wisdom saving throw or be charmed (if you chose awe) or " +
             "frightened (if you chose fear) until the aura ends. A creature that succeeds on this saving throw is " +
             "immune to your aura for 24 hours.",
+        actionType = ActionType.ACTION,
+        resource = Resource.SORCERY_POINTS,
     ),
 )
 
@@ -202,6 +214,8 @@ internal val WILD_MAGIC_FEATURES = listOf(
         summary =
         "Gain advantage on one attack roll, ability check or saving throw. Once per long rest, or until the GM has " +
             "you roll on the Wild Magic Surge table after casting a sorcerer spell of 1st level or higher.",
+        resource = Resource.TIDES_OF_CHAOS,
+        uses = Uses.fixed(count = 1, recharge = Recharge.LONG_REST),
     ),
     ClassFeature(
         id = "WILD_MAGIC_BEND_LUCK",
@@ -210,6 +224,8 @@ internal val WILD_MAGIC_FEATURES = listOf(
         summary =
         "Reaction, 2 sorcery points: when a creature you can see makes an attack roll, ability check or saving " +
             "throw, roll 1d4 and add it to or subtract it from the roll.",
+        actionType = ActionType.REACTION,
+        resource = Resource.SORCERY_POINTS,
     ),
     ClassFeature(
         id = "WILD_MAGIC_CONTROLLED_CHAOS",

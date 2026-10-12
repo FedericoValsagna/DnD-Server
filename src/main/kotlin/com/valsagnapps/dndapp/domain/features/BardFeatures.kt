@@ -1,6 +1,11 @@
 package com.valsagnapps.dndapp.domain.features
 
+import com.valsagnapps.dndapp.domain.Ability
+import com.valsagnapps.dndapp.domain.ActionType
 import com.valsagnapps.dndapp.domain.ClassFeature
+import com.valsagnapps.dndapp.domain.Recharge
+import com.valsagnapps.dndapp.domain.Resource
+import com.valsagnapps.dndapp.domain.Uses
 
 // Bard y sus colegios. Bard y College of Lore son SRD: llevan el texto del SRD 5.1 además del resumen propio.
 internal val BARD_FEATURES = listOf(
@@ -56,6 +61,9 @@ internal val BARD_FEATURES = listOf(
             "times equal to your Charisma modifier (a minimum of once). You regain any expended uses when you finish " +
             "a long rest.\n\nYour Bardic Inspiration die changes when you reach certain levels in this class. The " +
             "die becomes a d8 at 5th level, a d10 at 10th level, and a d12 at 15th level.",
+        actionType = ActionType.BONUS_ACTION,
+        resource = Resource.BARDIC_INSPIRATION,
+        uses = Uses.abilityModifier(Ability.CHARISMA, Recharge.LONG_REST, shortRestFromLevel = 5),
     ),
     ClassFeature(
         id = "BARD_JACK_OF_ALL_TRADES",
@@ -122,6 +130,7 @@ internal val BARD_FEATURES = listOf(
             "that time, you and any friendly creatures within 30 feet of you have advantage on saving throws against " +
             "being frightened or charmed. A creature must be able to hear you to gain this benefit. The performance " +
             "ends early if you are incapacitated or silenced or if you voluntarily end it (no action required).",
+        actionType = ActionType.ACTION,
     ),
     ClassFeature(
         id = "BARD_MAGICAL_SECRETS",
@@ -172,6 +181,8 @@ internal val LORE_FEATURES = listOf(
             "roll.\n\nYou can choose to use this feature after the creature makes its roll, but before the GM " +
             "determines whether the attack roll or ability check succeeds or fails, or before the creature deals its " +
             "damage. The creature is immune if it can't hear you or if it's immune to being charmed.",
+        actionType = ActionType.REACTION,
+        resource = Resource.BARDIC_INSPIRATION,
     ),
     ClassFeature(
         id = "LORE_ADDITIONAL_MAGICAL_SECRETS",
@@ -194,6 +205,7 @@ internal val LORE_FEATURES = listOf(
         "Starting at 14th level, when you make an ability check, you can expend one use of Bardic Inspiration. Roll " +
             "a Bardic Inspiration die and add the number rolled to your ability check. You can choose to do so after " +
             "you roll the die for the ability check, but before the GM tells you whether you succeed or fail.",
+        resource = Resource.BARDIC_INSPIRATION,
     ),
 )
 
@@ -224,5 +236,6 @@ internal val VALOR_FEATURES = listOf(
         name = "Battle Magic",
         level = 14,
         summary = "When you use your action to cast a bard spell, make one weapon attack as a bonus action.",
+        actionType = ActionType.BONUS_ACTION,
     ),
 )

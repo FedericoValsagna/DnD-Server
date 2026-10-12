@@ -1,6 +1,11 @@
 package com.valsagnapps.dndapp.domain.features
 
+import com.valsagnapps.dndapp.domain.ActionType
 import com.valsagnapps.dndapp.domain.ClassFeature
+import com.valsagnapps.dndapp.domain.Recharge
+import com.valsagnapps.dndapp.domain.Resource
+import com.valsagnapps.dndapp.domain.Uses
+import com.valsagnapps.dndapp.domain.atLevel
 
 // Fighter y sus arquetipos. Fighter y Champion son SRD: llevan el texto del SRD 5.1 además del resumen propio.
 internal val FIGHTER_FEATURES = listOf(
@@ -35,6 +40,9 @@ internal val FIGHTER_FEATURES = listOf(
         "You have a limited well of stamina that you can draw on to protect yourself from harm. On your turn, you " +
             "can use a bonus action to regain hit points equal to 1d10 + your fighter level. Once you use this " +
             "feature, you must finish a short or long rest before you can use it again.",
+        actionType = ActionType.BONUS_ACTION,
+        resource = Resource.SECOND_WIND,
+        uses = Uses.fixed(count = 1, recharge = Recharge.SHORT_REST),
     ),
     ClassFeature(
         id = "FIGHTER_ACTION_SURGE",
@@ -48,6 +56,12 @@ internal val FIGHTER_FEATURES = listOf(
             "take one additional action on top of your regular action and a possible bonus action.\n\nOnce you use " +
             "this feature, you must finish a short or long rest before you can use it again. Starting at 17th level, " +
             "you can use it twice before a rest, but only once on the same turn.",
+        resource = Resource.ACTION_SURGE,
+        uses = Uses.byLevel(
+            Recharge.SHORT_REST,
+            atLevel(level = 2, uses = 1),
+            atLevel(level = 17, uses = 2),
+        ),
     ),
     ClassFeature(
         id = "FIGHTER_ABILITY_SCORE_IMPROVEMENT",
@@ -81,6 +95,13 @@ internal val FIGHTER_FEATURES = listOf(
         "Beginning at 9th level, you can reroll a saving throw that you fail. If you do so, you must use the new " +
             "roll, and you can't use this feature again until you finish a long rest. You can use this feature twice " +
             "between long rests starting at 13th level and three times between long rests starting at 17th level.",
+        resource = Resource.INDOMITABLE,
+        uses = Uses.byLevel(
+            Recharge.LONG_REST,
+            atLevel(level = 9, uses = 1),
+            atLevel(level = 13, uses = 2),
+            atLevel(level = 17, uses = 3),
+        ),
     ),
 )
 
@@ -160,6 +181,13 @@ internal val BATTLE_MASTER_FEATURES = listOf(
             "melee, attack it and add the die to damage); Sweeping Attack (deal the die as damage to another " +
             "creature within 5 ft if the attack roll would hit it); Trip Attack (add the die to damage, Strength " +
             "save or prone, Large or smaller).",
+        resource = Resource.SUPERIORITY_DICE,
+        uses = Uses.byLevel(
+            Recharge.SHORT_REST,
+            atLevel(level = 3, uses = 4),
+            atLevel(level = 7, uses = 5),
+            atLevel(level = 15, uses = 6),
+        ),
     ),
     ClassFeature(
         id = "BATTLE_MASTER_STUDENT_OF_WAR",
@@ -208,12 +236,14 @@ internal val ELDRITCH_KNIGHT_FEATURES = listOf(
         summary =
         "A 1-hour ritual bonds you to a weapon (up to two). You can't be disarmed of it unless incapacitated, and as " +
             "a bonus action you can summon it to your hand from the same plane.",
+        actionType = ActionType.BONUS_ACTION,
     ),
     ClassFeature(
         id = "ELDRITCH_KNIGHT_WAR_MAGIC",
         name = "War Magic",
         level = 7,
         summary = "When you use your action to cast a cantrip, make one weapon attack as a bonus action.",
+        actionType = ActionType.BONUS_ACTION,
     ),
     ClassFeature(
         id = "ELDRITCH_KNIGHT_ELDRITCH_STRIKE",

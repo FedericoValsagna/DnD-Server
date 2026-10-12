@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.valsagnapps.dndapp.application.port.inbound.CreateCharacterCommand
 import com.valsagnapps.dndapp.domain.Ability
 import com.valsagnapps.dndapp.domain.AbilityScores
+import com.valsagnapps.dndapp.domain.ActionType
 import com.valsagnapps.dndapp.domain.ArmorProficiency
 import com.valsagnapps.dndapp.domain.Character
 import com.valsagnapps.dndapp.domain.CharacterClass
@@ -13,6 +14,7 @@ import com.valsagnapps.dndapp.domain.HitPoints
 import com.valsagnapps.dndapp.domain.LifeStatus
 import com.valsagnapps.dndapp.domain.Proficiencies
 import com.valsagnapps.dndapp.domain.Proficiency
+import com.valsagnapps.dndapp.domain.Resource
 import com.valsagnapps.dndapp.domain.Skill
 import com.valsagnapps.dndapp.domain.SkillChoice
 import com.valsagnapps.dndapp.domain.SkillProficiencies
@@ -112,6 +114,8 @@ data class SubclassResponse(val id: Subclass, val name: String, val source: Sour
 }
 
 // Feature ganada: la app muestra el resumen; srdText (texto completo del SRD) es null si no es SRD.
+// actionType es null en las pasivas. resource: el recurso que gasta o que da (puede no estar en `resources` del
+// personaje si es sin límite, como Rage al 20).
 data class ClassFeatureResponse(
     val id: String,
     val name: String,
@@ -119,6 +123,8 @@ data class ClassFeatureResponse(
     val summary: String,
     val srdText: String?,
     val source: Source,
+    val actionType: ActionType?,
+    val resource: Resource?,
 ) {
     companion object {
         fun from(feature: ClassFeature) = ClassFeatureResponse(
@@ -128,6 +134,8 @@ data class ClassFeatureResponse(
             summary = feature.summary,
             srdText = feature.srdText,
             source = feature.source,
+            actionType = feature.actionType,
+            resource = feature.resource,
         )
     }
 }
@@ -192,6 +200,8 @@ data class CharacterResponse(
     // speed es baseSpeed más lo que suman las clases.
     val speed: Int,
     val baseSpeed: Int,
+    // Recursos con usos que dan las features, en el orden de las clases.
+    val resources: List<ResourceResponse>,
 ) {
     companion object {
         fun from(character: Character) = CharacterResponse(
@@ -242,6 +252,7 @@ data class CharacterResponse(
             initiative = character.initiative,
             speed = character.speed,
             baseSpeed = character.baseSpeed,
+            resources = character.resources.map { ResourceResponse.from(it) },
         )
     }
 }
