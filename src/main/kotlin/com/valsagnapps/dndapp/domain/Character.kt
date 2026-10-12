@@ -15,6 +15,8 @@ data class Character(
     val baseSpeed: Int = DEFAULT_SPEED,
     // Usos gastados de cada recurso; los que no están, sin gastar.
     val resourcesUsed: Map<Resource, Int> = emptyMap(),
+    // Hit Dice gastados por tamaño de dado (10 = d10); los que no están, sin gastar.
+    val hitDiceUsed: Map<Int, Int> = emptyMap(),
 ) {
     init {
         require(name.isNotBlank()) { "name must not be blank" }
@@ -27,6 +29,7 @@ data class Character(
         }
         require(baseSpeed in 0..MAX_SPEED) { "speed must be between 0 and $MAX_SPEED, was $baseSpeed" }
         require(resourcesUsed.values.all { it >= 0 }) { "used resources can't be negative" }
+        require(hitDiceUsed.values.all { it >= 0 }) { "used hit dice can't be negative" }
     }
 
     val maxHitPoints: Int
@@ -39,12 +42,9 @@ data class Character(
     val proficiencyBonus: Int
         get() = 2 + (level - 1) / 4
 
-    // Dados de golpe totales agrupados por tamaño, de mayor a menor (ej. {10: 3, 8: 2}).
-    val hitDice: Map<Int, Int>
-        get() = classes
-            .groupBy { it.characterClass.hitDie }
-            .mapValues { (_, levels) -> levels.sumOf { it.level } }
-            .toSortedMap(reverseOrder())
+    // Hit Dice agrupados por tamaño, de mayor a menor (ej. d10 × 3, d8 × 2), con los usados.
+    val hitDice: List<HitDice>
+        get() = HitDice.of(classes, hitDiceUsed)
 
     // La clase inicial da sus competencias completas; las que se suman por multiclase, las reducidas.
     val proficiencies: Proficiencies

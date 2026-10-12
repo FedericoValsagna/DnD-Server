@@ -174,7 +174,8 @@ data class ProficienciesResponse(
     }
 }
 
-data class HitDiceResponse(val die: Int, val count: Int)
+// used: los gastados en short rests, que vuelven con el long rest.
+data class HitDiceResponse(val die: Int, val count: Int, val used: Int)
 
 data class CharacterResponse(
     val id: UUID,
@@ -225,7 +226,7 @@ data class CharacterResponse(
             temporaryHitPoints = character.hitPoints.temporary,
             lifeStatus = character.hitPoints.status,
             deathSaves = character.hitPoints.deathSaves.let { DeathSavesResponse(it.successes, it.failures) },
-            hitDice = character.hitDice.map { (die, count) -> HitDiceResponse(die, count) },
+            hitDice = character.hitDice.map { HitDiceResponse(it.die, it.count, it.used) },
             abilities = Ability.entries.associateWith {
                 AbilityResponse(
                     score = character.abilityScores.scoreOf(it),

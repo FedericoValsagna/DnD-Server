@@ -22,6 +22,7 @@ fun character(
     armorClassOverride: Int? = null,
     baseSpeed: Int = Character.DEFAULT_SPEED,
     resourcesUsed: Map<Resource, Int> = emptyMap(),
+    hitDiceUsed: Map<Int, Int> = emptyMap(),
 ) = Character(
     id,
     name,
@@ -32,4 +33,5 @@ fun character(
     armorClassOverride,
     baseSpeed,
     resourcesUsed,
+    hitDiceUsed,
 )
