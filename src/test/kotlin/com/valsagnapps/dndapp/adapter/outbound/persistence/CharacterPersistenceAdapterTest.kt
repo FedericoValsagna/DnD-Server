@@ -105,6 +105,35 @@ class CharacterPersistenceAdapterTest {
     }
 
     @Test
+    fun `saves and loads used hit dice`() {
+        val character = character(
+            classes = listOf(ClassLevel(CharacterClass.FIGHTER, 3), ClassLevel(CharacterClass.WIZARD, 2)),
+            hitDiceUsed = mapOf(10 to 2, 6 to 1),
+        )
+
+        adapter.save(character)
+
+        assertEquals(character, adapter.findById(character.id))
+    }
+
+    @Test
+    fun `replaces used hit dice and drops the dice the character no longer has`() {
+        val character = character(
+            classes = listOf(ClassLevel(CharacterClass.FIGHTER, 3), ClassLevel(CharacterClass.WIZARD, 2)),
+            hitDiceUsed = mapOf(10 to 2, 6 to 1),
+        )
+        adapter.save(character)
+        entityManager.flush()
+        entityManager.clear()
+
+        adapter.save(character.withClasses(listOf(ClassLevel(CharacterClass.FIGHTER, 1))))
+        entityManager.flush()
+        entityManager.clear()
+
+        assertEquals(mapOf(10 to 1), adapter.findById(character.id)?.hitDiceUsed)
+    }
+
+    @Test
     fun `finds all characters`() {
         val characters = listOf(character(name = "Lidda"), character(name = "Krusk"))
         characters.forEach { adapter.save(it) }

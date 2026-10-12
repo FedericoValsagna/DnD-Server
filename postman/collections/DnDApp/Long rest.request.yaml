@@ -1,0 +1,18 @@
+$kind: http-request
+name: Long rest
+url: "{{baseUrl}}/api/v1/characters/{{characterId}}/long-rest"
+method: POST
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      const body = pm.response.json();
+
+      pm.test("hit points, hit dice and resources recovered", function () {
+        pm.response.to.have.status(200);
+        pm.expect(body.currentHitPoints).to.equal(body.maxHitPoints);
+        pm.expect(body.temporaryHitPoints).to.equal(0);
+        body.hitDice.forEach(d => pm.expect(d.used).to.equal(0));
+        body.resources.forEach(r => pm.expect(r.used).to.equal(0));
+      });
+order: 84

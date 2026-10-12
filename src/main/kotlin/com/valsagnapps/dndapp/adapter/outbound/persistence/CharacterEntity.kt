@@ -55,4 +55,10 @@ class CharacterEntity(
     @MapKeyEnumerated(EnumType.STRING)
     @Column(name = "used")
     val resourcesUsed: MutableMap<Resource, Int>,
+    // Solo los dados con alguno gastado.
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "character_hit_dice", joinColumns = [JoinColumn(name = "character_id")])
+    @MapKeyColumn(name = "die")
+    @Column(name = "used")
+    val hitDiceUsed: MutableMap<Int, Int>,
 )

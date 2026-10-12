@@ -139,7 +139,7 @@ class CharacterTest {
 
     @Test
     fun `hit dice come from the class`() {
-        assertEquals(mapOf(8 to 15), character(level = 15, characterClass = CharacterClass.CLERIC).hitDice)
+        assertEquals(listOf(HitDice(8, 15, 0)), character(level = 15, characterClass = CharacterClass.CLERIC).hitDice)
     }
 
     @Test
@@ -152,7 +152,7 @@ class CharacterTest {
             ),
         )
 
-        assertEquals(listOf(10 to 4, 6 to 2), character.hitDice.toList())
+        assertEquals(listOf(HitDice(10, 4, 0), HitDice(6, 2, 0)), character.hitDice)
     }
 
     @Test
